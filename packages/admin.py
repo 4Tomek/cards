@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import Basic_card, Textbook
 
-# Register your models here.
+admin.site.register(Basic_card)
+admin.site.register(Textbook)
