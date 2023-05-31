@@ -2,6 +2,14 @@
 
 {% block content %}
 
-<h1>Single Package</h1>
+<h1>{{textbook.name}}</h1>
+<hr>
+<p>List of cards:</p>
+<hr>
+{% for card in cards %}
+<p>{{card.question}} - {{card.answer}} </p>
+{% endfor %}
+<hr>
+<br>
 
 {% endblock content %}

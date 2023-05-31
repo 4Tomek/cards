@@ -2,17 +2,13 @@
 
 {% block content %}
 
-<p>Hello you are on the {{page}} page</p>
-
-{% if number > 10 %}
-<p>Number is greater than 10</p>
-{% elif number == 10 %}
-<p>Number is exactly 10</p>
-{% else %}
-<p>Number is less than 10</p>
-{% endif %}
-
 <h1>Packages</h1>
-<p>Lorem ipsum</p>
+
+{% for textbook in textbooks %}
+<p>{{textbook.name}}</p>
+<p>{{textbook.created}}</p>
+<p>{{textbook.id}}</p>
+<br>
+{% endfor %}
 
 {% endblock content %}
