@@ -3,11 +3,10 @@ from django.http import HttpResponse
 
 
 def packages(request):
-    return render(request, 'packages/packages.html')
-
-# def packages(request):
-#     msg = 'Hello, you are on the packages page'
-#     return render(request, 'packages/packages.html', {'message': msg})
+    page = 'packeges'
+    number = 10
+    context = {'page': page, 'number': number}
+    return render(request, 'packages/packages.html', context)
 
 
 def package(request, pk):
