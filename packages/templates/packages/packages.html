@@ -8,6 +8,7 @@
 <p>{{textbook.name}}</p>
 <p>{{textbook.created}}</p>
 <p>{{textbook.id}}</p>
+<a href="{% url 'package' textbook.id %}">Enter this Textbook</a>
 <br>
 {% endfor %}
 
