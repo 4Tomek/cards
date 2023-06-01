@@ -4,4 +4,5 @@ from . import views
 urlpatterns = [
     path('', views.packages, name="packages"),
     path('package/<str:pk>', views.package, name="package"),
+    path('create-package/', views.createTextbook, name="create-package"),
 ]
