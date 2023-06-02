@@ -4,12 +4,14 @@
 
 <h1>{{textbook.name}}</h1>
 <hr>
-<p>List of cards:</p>
+<p>Question:</p>
+<h2>{{card.question}}</h2>
 <hr>
-{% for card in cards %}
-<p>{{card.question}} - {{card.answer}} </p>
-{% endfor %}
-<hr>
+<p id="showAnswer"></p>
+<button type="button" onclick='document.getElementById("showAnswer").innerHTML = "<h2>{{card.answer}}</h2>"'>Show Answer</button>
 <br>
+<a href={% url 'package' textbook.id card.id 1 %}>Right   </a>
+
+<a href={% url 'package' textbook.id card.id 0 %}>Wrong</a>
 
 {% endblock content %}
