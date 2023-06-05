@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import Textbook, Basic_card
+from .models import Textbook, Lesson, Basic_card
 from .forms import PackageForm
 import random
 
@@ -41,6 +41,34 @@ def package(request, pk, card, answer):
 
 
 def createTextbook(request):
+    if request.method == 'POST':
+        textbookName = request.POST.get('newTextbook')
+        lessonsNames = request.POST.get('lessons').split(',')
+        message = ''
+        if textbookName:
+            textbookName = textbookName.strip()
+            textbook, created = Textbook.objects.get_or_create(
+                name=textbookName)
+            if created == False:
+                message = "textbook with this name already exists, choose another name"
+                context = {'message': message}
+                return render(request, 'packages/textbook_form.html', context)
+            else:
+                textbook.save()
+                if lessonsNames:
+                    for lesson in lessonsNames:
+                        lesson = lesson.strip()
+                        lesson, created = Lesson.objects.get_or_create(
+                            name=lesson, textbook=textbook)
+                        lesson.save()
+
+                form = PackageForm()
+                context = {'form': form}
+                return render(request, 'packages/cards_form.html', context)
+    return render(request, 'packages/textbook_form.html')
+
+
+def createCards(request):
     form = PackageForm()
 
     if request.method == 'POST':
@@ -51,19 +79,20 @@ def createTextbook(request):
 
             formData = form.save(commit=False)
             textbookObj = formData.textbook
+            lessonObj = formData.lesson
 
             for task in content:
                 question, answer = task.split('-')
                 question = question.strip()
                 answer = answer.strip()
                 card, created = Basic_card.objects.get_or_create(
-                    question=question, answer=answer, textbook=textbookObj)
+                    question=question, answer=answer, textbook=textbookObj, lesson=lessonObj)
                 card.save()
 
             return redirect('packages')
 
     context = {'form': form}
-    return render(request, "packages/package_form.html", context)
+    return render(request, "packages/cards_form.html", context)
 
 
 def cardsFinished(request, pk):

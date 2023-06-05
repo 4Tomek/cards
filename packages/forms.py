@@ -5,4 +5,4 @@ from .models import Textbook, Basic_card
 class PackageForm(ModelForm):
     class Meta:
         model = Basic_card
-        fields = ['textbook']
+        fields = ['textbook', 'lesson']

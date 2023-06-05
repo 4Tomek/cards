@@ -5,11 +5,11 @@
 
 <form method="POST">
     {% csrf_token %}
-    {{form}}
+    {{form.as_p}}
 
     <div>
         <label>Cards</label>
-        <textarea class="input" name="content" placeholder="Write: <question1> - <answer1>, <question2> - <answer2>, ..."></textarea>
+        <textarea class="input" name="content" placeholder="write: <question1> - <answer1>, <question2> - <answer2>, ..."></textarea>
     </div>
 
     <input type="submit">

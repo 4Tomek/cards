@@ -1,0 +1,23 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<h1>Create new private textbook</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <div>
+        <label>New Textbook name:</label>
+        <textarea class="input" name="newTextbook" placeholder="here you type new textbook name"></textarea>
+    </div>
+
+    <div>
+        <label>Add names of lessons (optional)</label>
+        <textarea class="input" name="lessons" placeholder="divide lesson names by comma"></textarea>
+    </div>
+
+    <input type="submit">
+</form>
+<p>{{message}}</p>
+
+{% endblock %}
