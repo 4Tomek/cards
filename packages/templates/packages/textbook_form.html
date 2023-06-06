@@ -6,10 +6,13 @@
 
 <form method="POST">
     {% csrf_token %}
+
+    {% if not textbookId %}
     <div>
         <label>New Textbook</label>
         <textarea class="input" name="newTextbook" placeholder="here you type new textbook name"></textarea>
     </div>
+    {% endif %}
 
     <div>
         <label>Lesson Names</label>

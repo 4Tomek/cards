@@ -39,34 +39,50 @@ def package(request, pk, card, answer):
         return render(request, 'packages/single-package.html', context)
 
 
-def createTextbook(request):
+def createTextbook(request, textbookId=None):
     if request.method == 'POST':
-        textbookName = request.POST.get('newTextbook')
-        lessonsNames = request.POST.get('lessons')
-        if lessonsNames:
-            lessonsNames = lessonsNames.split(',')
-        message = ''
-        if textbookName:
-            textbookName = textbookName.strip()
-            textbook, created = Textbook.objects.get_or_create(
-                name=textbookName)
-            if created == False:
-                message = "textbook with this name already exists, choose another name"
-                context = {'message': message}
-                return render(request, 'packages/textbook_form.html', context)
+        if not textbookId:
+            textbookName = request.POST.get('newTextbook')
+            lessonsNames = request.POST.get('lessons')
+            if lessonsNames:
+                lessonsNames = lessonsNames.split(',')
+            message = ''
+            if textbookName:
+                textbookName = textbookName.strip()
+                textbook, created = Textbook.objects.get_or_create(
+                    name=textbookName)
+                if created == False:
+                    message = "textbook with this name already exists, choose another name"
+                    context = {'message': message}
+                    return render(request, 'packages/textbook_form.html', context)
+                else:
+                    textbook.save()
+                    if lessonsNames:
+                        for lesson in lessonsNames:
+                            lesson = lesson.strip()
+                            lesson, created = Lesson.objects.get_or_create(
+                                name=lesson, textbook=textbook)
+                            lesson.save()
+
+                    textbookId = textbook.id
+                    return redirect('select-lesson', textbookId=textbookId)
+        else:
+            textbook = Textbook.objects.get(id=textbookId)
+            lessonsNames = request.POST.get('lessons')
+            if lessonsNames:
+                lessonsNames = lessonsNames.split(',')
+                for lesson in lessonsNames:
+                    lesson = lesson.strip()
+                    lesson, created = Lesson.objects.get_or_create(
+                        name=lesson, textbook=textbook)
+                    lesson.save()
             else:
-                textbook.save()
-                if lessonsNames:
-                    for lesson in lessonsNames:
-                        lesson = lesson.strip()
-                        lesson, created = Lesson.objects.get_or_create(
-                            name=lesson, textbook=textbook)
-                        lesson.save()
+                print("something went wrong")
+            textbookId = textbook.id
+            return redirect('select-lesson', textbookId=textbookId)
 
-                textbookId = textbook.id
-                return redirect('select-lesson', textbookId=textbookId)
-
-    return render(request, 'packages/textbook_form.html')
+    context = {'textbookId': textbookId}
+    return render(request, 'packages/textbook_form.html', context)
 
 
 def selectLesson(request, textbookId):
@@ -81,7 +97,7 @@ def selectLesson(request, textbookId):
     return render(request, 'packages/lesson_form.html', context)
 
 
-def createCards(request, textbook, lesson):
+def createCards(request, textbook, lesson=None):
     textbook = Textbook.objects.get(id=textbook)
     lesson = Lesson.objects.get(id=lesson)
     if request.method == 'POST':

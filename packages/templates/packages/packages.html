@@ -5,11 +5,14 @@
 <h1>Packages</h1>
 
 {% for textbook in textbooks %}
-<p>{{textbook.name}}</p>
-<p>{{textbook.created}}</p>
-<p>{{textbook.id}}</p>
-<a href="{% url 'package' textbook.id '0' '0' %}">Enter this Textbook</a>
-<br>
+    <p>{{textbook.name}}</p>
+    <p>{{textbook.created}}</p>
+    <p>{{textbook.id}}</p>
+    <a href="{% url 'create-lessons' textbook.id %}">Add Lessons</a>
+    <br>
+    <a href="{% url 'select-lesson' textbook.id %}">Add Cards into Lesson</a>
+    <br>
+    <a href="{% url 'package' textbook.id '0' '0' %}">Learn from this Textbook</a>
 {% endfor %}
 
 {% endblock content %}
