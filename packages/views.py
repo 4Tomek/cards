@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Textbook, Lesson, Basic_card
-from .forms import PackageForm
 import random
 
 
@@ -43,7 +42,9 @@ def package(request, pk, card, answer):
 def createTextbook(request):
     if request.method == 'POST':
         textbookName = request.POST.get('newTextbook')
-        lessonsNames = request.POST.get('lessons').split(',')
+        lessonsNames = request.POST.get('lessons')
+        if lessonsNames:
+            lessonsNames = lessonsNames.split(',')
         message = ''
         if textbookName:
             textbookName = textbookName.strip()
@@ -62,43 +63,47 @@ def createTextbook(request):
                             name=lesson, textbook=textbook)
                         lesson.save()
 
-                form = PackageForm()
-                context = {'form': form}
-                return render(request, 'packages/cards_form.html', context)
+                textbookId = textbook.id
+                return redirect('select-lesson', textbookId=textbookId)
+
     return render(request, 'packages/textbook_form.html')
 
 
-def createCards(request):
-    form = PackageForm()
-
+def selectLesson(request, textbookId):
+    textbook = Textbook.objects.get(id=textbookId)
+    lessons = Lesson.objects.filter(textbook=textbook)
     if request.method == 'POST':
+        lessonId = None
+        lessonId = request.POST.get('select_lesson')
+        return redirect('create-cards', textbook=textbook.id, lesson=lessonId)
 
-        form = PackageForm(request.POST)
-        if form.is_valid():
-            content = request.POST.get('content').split(',')
+    context = {'textbookId': textbookId, 'lessons': lessons}
+    return render(request, 'packages/lesson_form.html', context)
 
-            formData = form.save(commit=False)
-            textbookObj = formData.textbook
-            lessonObj = formData.lesson
 
-            for task in content:
-                question, answer = task.split('-')
-                question = question.strip()
-                answer = answer.strip()
-                card, created = Basic_card.objects.get_or_create(
-                    question=question, answer=answer, textbook=textbookObj, lesson=lessonObj)
-                card.save()
+def createCards(request, textbook, lesson):
+    textbook = Textbook.objects.get(id=textbook)
+    lesson = Lesson.objects.get(id=lesson)
+    if request.method == 'POST':
+        content = request.POST.get('content').split(',')
 
-            return redirect('packages')
+        for card in content:
+            question, answer = card.split('-')
+            question = question.strip()
+            answer = answer.strip()
+            card, created = Basic_card.objects.get_or_create(
+                question=question, answer=answer, textbook=textbook, lesson=lesson)
+            card.save()
 
-    context = {'form': form}
+        return redirect('packages')
+    context = {'textbook': textbook, 'lesson': lesson}
     return render(request, "packages/cards_form.html", context)
 
 
 def cardsFinished(request, pk):
     textbook = pk
     context = {'textbook': textbook}
-    return render(request, 'packages/cards-finished')
+    return render(request, 'packages/cards-finished.html')
 
 
 def resetTextbook(request, pk):

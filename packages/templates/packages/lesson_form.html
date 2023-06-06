@@ -1,0 +1,19 @@
+{% extends 'main.html' %}
+{% block content %}
+
+<h1>Select lesson</h1>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <div>
+        <label>Lesson:</label>
+        {% for lesson in lessons %}
+        <input class="radio" type="radio" id="{{lesson.id}}" name="select_lesson" value="{{lesson.id}}" >{{lesson}}</input>
+        {% endfor %}
+    </div>
+
+    <input type="submit">
+</form>
+
+{% endblock %}

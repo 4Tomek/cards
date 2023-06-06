@@ -1,11 +1,10 @@
 {% extends 'main.html' %}
 {% block content %}
 
-<h1>Package Form</h1>
+<h1>New cards</h1>
 
 <form method="POST">
     {% csrf_token %}
-    {{form.as_p}}
 
     <div>
         <label>Cards</label>
