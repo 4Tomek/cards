@@ -5,8 +5,11 @@ urlpatterns = [
     path('', views.packages, name="packages"),
     path('package/<str:pk>/<str:card>/<int:answer>/',
          views.package, name="package"),
-    path('cards-finished/<str:pk>/', views.cardsFinished, name="cards-finished"),
-    path('reset-textbook/<str:pk>/', views.resetTextbook, name="reset-textbook"),
+
+    path('activate/<str:pk>/<str:card>/<int:answer>/',
+         views.activateLessons, name="activate-lessons"),
+    path('cards-finished/<str:pk>/<str:card>/<int:answer>/',
+         views.cardsFinished, name="cards-finished"),
 
     path('create-textbook/',
          views.createTextbook, name="create-textbook"),

@@ -32,11 +32,40 @@ def package(request, pk, card, answer):
     # if i have no cards with: 'mastered=False'
     if cardsFinished:
         textbookId = textbookObj.id
-        context = {'textbook': textbookId}
+        context = {'textbookId': textbookId}
         return render(request, 'packages/cards-finished.html', context)
     else:
         context = {'textbook': textbookObj, 'card': card}
         return render(request, 'packages/single-package.html', context)
+
+
+def activateLessons(request, pk, card, answer):
+    textbook = Textbook.objects.get(id=pk)
+    lessons = Lesson.objects.filter(textbook=textbook)
+    if request.method == 'POST':
+        lessonsIds = request.POST.getlist('selected_lessons')
+        if lessonsIds:
+            cards = textbook.basic_card_set.all()
+            for card in cards:
+                card.mastered = True
+                card.save()
+            for lesson in lessonsIds:
+                cardsToActivate = Basic_card.objects.filter(lesson=lesson)
+                for card in cardsToActivate:
+                    card.mastered = False
+                    card.save()
+
+            print('pk', pk, 'card', card, 'answer', answer)
+            pk = textbook.id
+
+            return redirect('package', pk=pk, card=card, answer=answer)
+
+    context = {'pk': pk, 'card': card, 'answer': answer, 'lessons': lessons}
+    return render(request, 'packages/activate-lessons.html', context)
+
+
+def cardsFinished(request):
+    return render(request, 'packages/cards-finished.html')
 
 
 def createTextbook(request, textbookId=None):
@@ -114,20 +143,3 @@ def createCards(request, textbook, lesson=None):
         return redirect('packages')
     context = {'textbook': textbook, 'lesson': lesson}
     return render(request, "packages/cards_form.html", context)
-
-
-def cardsFinished(request, pk):
-    textbook = pk
-    context = {'textbook': textbook}
-    return render(request, 'packages/cards-finished.html')
-
-
-def resetTextbook(request, pk):
-    textbookObj = Textbook.objects.get(id=pk)
-    cards = textbookObj.basic_card_set.all()
-    for card in cards:
-        card.mastered = False
-        card.save()
-    textbooks = Textbook.objects.all()
-    context = {'textbooks': textbooks}
-    return render(request, 'packages/packages.html', context)

@@ -2,9 +2,12 @@
 
 {% block content %}
 
-<h2>You just finished your textbook</h2>
+<h2>Congratulations, you just finished all Cards</h2>
 
-<a href={% url 'reset-textbook' textbook %}>If you click here, all cards will be refreshed</a>
+
+<a href="{% url 'activate-lessons' textbookId '0' '0' %}">Activate Lessons from this textbook</a>
+<br>
+<a href="{% url 'packages' %}">All Textbooks</a>
 
 
 {% endblock content %}
