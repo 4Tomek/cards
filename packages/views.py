@@ -26,7 +26,7 @@ def package(request, pk, card, answer, lastCard):
 
         if cards:
             repetitionCheck = True
-            if lastCard == 'last-card-does-not-exist-yet':
+            if lastCard == None:
                 card = random.choice(cards)
                 repetitionCheck = False
 
@@ -67,7 +67,7 @@ def activateLessons(request, pk, card, answer):
                     card.save()
 
             pk = textbook.id
-            return redirect('package', pk=pk, card=card, answer=answer, lastCard='last-card-does-not-exist-yet')
+            return redirect('package', pk=pk, card=card, answer=answer, lastCard=None)
 
     context = {'pk': pk, 'card': card, 'answer': answer, 'lessons': lessons}
     return render(request, 'packages/activate-lessons.html', context)
