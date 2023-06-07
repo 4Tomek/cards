@@ -10,7 +10,7 @@ def packages(request):
     return render(request, 'packages/packages.html', context)
 
 
-def package(request, pk, card, answer):
+def package(request, pk, card, answer, lastCard):
     textbookObj = Textbook.objects.get(id=pk)
     cards = textbookObj.basic_card_set.filter(mastered=False)
     cardsFinished = True
@@ -25,7 +25,18 @@ def package(request, pk, card, answer):
             cards = textbookObj.basic_card_set.filter(mastered=False)
 
         if cards:
-            card = random.choice(cards)
+            repetitionCheck = True
+            if lastCard == 'last-card-does-not-exist-yet':
+                card = random.choice(cards)
+                repetitionCheck = False
+
+            while repetitionCheck:
+                card = random.choice(cards)
+                if len(cards) < 2:
+                    repetitionCheck = False
+                if card.question != lastCard:
+                    repetitionCheck = False
+            lastCard = card
         else:
             cardsFinished = True
 
@@ -35,7 +46,7 @@ def package(request, pk, card, answer):
         context = {'textbookId': textbookId}
         return render(request, 'packages/cards-finished.html', context)
     else:
-        context = {'textbook': textbookObj, 'card': card}
+        context = {'textbook': textbookObj, 'card': card, 'lastCard': lastCard}
         return render(request, 'packages/single-package.html', context)
 
 
@@ -55,10 +66,8 @@ def activateLessons(request, pk, card, answer):
                     card.mastered = False
                     card.save()
 
-            print('pk', pk, 'card', card, 'answer', answer)
             pk = textbook.id
-
-            return redirect('package', pk=pk, card=card, answer=answer)
+            return redirect('package', pk=pk, card=card, answer=answer, lastCard='last-card-does-not-exist-yet')
 
     context = {'pk': pk, 'card': card, 'answer': answer, 'lessons': lessons}
     return render(request, 'packages/activate-lessons.html', context)

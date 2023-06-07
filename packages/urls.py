@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns = [
     path('', views.packages, name="packages"),
-    path('package/<str:pk>/<str:card>/<int:answer>/',
+    path('package/<str:pk>/<str:card>/<int:answer>/<str:lastCard>/',
          views.package, name="package"),
 
     path('activate/<str:pk>/<str:card>/<int:answer>/',
