@@ -1,14 +1,10 @@
 {% extends 'main.html' %}
 
 {% block content %}
-
-<h1>User Profiles</h1>
-{% for profile in profiles %}
 <h2>Name: {{profile.name}}</h2>
 <p>Email: {{profile.email}}</p>
 <p>Short intro: {{profile.short_intro|slice:"150"}}</p>
+<p>Username: {{profile.username}}</p>
+<p>Location: {{profile.location}}</p>
 <p>Bio: {{profile.bio}}</p>
-<a href="{% url 'user-profile' profile.id %}">Go to this Profile</a>
-{% endfor %}
-
 {% endblock content %}
