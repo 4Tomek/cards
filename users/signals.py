@@ -8,11 +8,11 @@ from .models import Profile
 def createProfile(sender, instance, created, **kwargs):
     if created:
         user = instance
-        profile = Profile.objects.create(
+        Profile.objects.create(
             user=user,
             username=user.username,
             email=user.email,
-            name=user.first_name,
+            name=user.first_name
         )
 
 
