@@ -2,11 +2,41 @@
 
 {% block content %}
 
+{% if page == 'register' %}
+<h1>Register User</h1>
+<form method="POST" action="{% url 'register' %}">
+    {% csrf_token %}
+
+    {% for field in form %}
+    <div class="form__field">
+      <label for="formInput#text">{{field.label}}</label>
+      {{field}}
+    
+      {% if field.help_text %}
+      <small>{{field.help_text}}
+      {% endif %}
+    
+      {% for error in field.errors %}
+      <p style="color: red";>{{error}}</p>
+      {% endfor %}
+    
+    </div>
+    {% endfor %}
+    <input type="submit" value="Register User" />
+</form>
+
+<p>Already have an account <a href="{% url 'login' %}">Sign Up</a></p>
+
+{% else %}
+
 <form action="{% url 'login' %}" method="POST">
     {% csrf_token %} 
     <input type="text" name="username" placeholder="Username" />
     <input type="password" name="password" placeholder="Enter password" />
     <input type="submit" value="Login" />
+
+    <p>Don't have an account <a href="{% url 'register' %}">Sign Up</a></p>
 </form>
+{% endif %}
 
 {% endblock content %}
