@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import Textbook, Lesson, Basic_card
 import random
+from django.contrib import messages
 
 
 def packages(request):
@@ -92,9 +93,9 @@ def createTextbook(request, textbookId=None):
                 textbook, created = Textbook.objects.get_or_create(
                     name=textbookName)
                 if created == False:
-                    message = "textbook with this name already exists, choose another name"
-                    context = {'message': message}
-                    return render(request, 'packages/textbook_form.html', context)
+                    messages.error(
+                        request, "Textbook with this name already exists, choose another name")
+                    return render(request, 'packages/textbook_form.html')
                 else:
                     textbook.save()
                     if lessonsNames:

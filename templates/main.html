@@ -10,6 +10,13 @@
     <h1>This is the main template</h1>
     {% include 'navbar.html' %}
 
+    {% if messages %}
+        {% for message in messages %}
+        {{message}}
+        <br>
+        {% endfor %}
+    {% endif %} 
+
     {% block content %}
 
     {% endblock content %}
