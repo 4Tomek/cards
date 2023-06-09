@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 from .models import Textbook, Lesson, Basic_card
 import random
 
@@ -77,6 +78,7 @@ def cardsFinished(request):
     return render(request, 'packages/cards-finished.html')
 
 
+@login_required(login_url="login")
 def createTextbook(request, textbookId=None):
     if request.method == 'POST':
         if not textbookId:
