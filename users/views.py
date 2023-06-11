@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Profile
 from django.contrib import messages
@@ -73,6 +74,10 @@ def registerUser(request):
     return render(request, 'users/login_register.html', context)
 
 
+@login_required(login_url='login')
 def userAccount(request):
-    context = {}
+    profile = request.user.profile
+    textbooks = profile.textbook_set.all()
+
+    context = {'profile': profile, 'textbooks': textbooks}
     return render(request, 'users/account.html', context)

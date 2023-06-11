@@ -1,0 +1,21 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<h1>My account</h1>
+
+<h2>Name: {{profile.name}}</h2>
+<p>Email: {{profile.email}}</p>
+<p>Short intro: {{profile.short_intro|slice:"150"}}</p>
+<p>Username: {{profile.username}}</p>
+<p>Location: {{profile.location}}</p>
+<p>Bio: {{profile.bio}}</p>
+{% if profile.user_website %}
+    <a title="website" href="{{profile.user_website}}" target="_blank">{{profile.username}}'s Webpage</a>
+{% endif %}
+
+<h3>List of {{profile.username}}'s Textbooks:</h3>
+{% for textbook in textbooks %}
+    <p>{{textbook.name}}</p>
+{% endfor %}
+
+{% endblock %}
