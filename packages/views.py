@@ -88,7 +88,6 @@ def createTextbook(request, textbookId=None):
             lessonsNames = request.POST.get('lessons')
             if lessonsNames:
                 lessonsNames = lessonsNames.split(',')
-            message = ''
             if textbookName:
                 textbookName = textbookName.strip()
                 textbook, created = Textbook.objects.get_or_create(
@@ -143,15 +142,23 @@ def createCards(request, textbook, lesson=None):
     textbook = Textbook.objects.get(id=textbook)
     lesson = Lesson.objects.get(id=lesson)
     if request.method == 'POST':
-        content = request.POST.get('content').split(',')
+        content = request.POST.get('content')
+        if ',' in content:
+            content = content.split(',')
 
-        for card in content:
-            question, answer = card.split('-')
-            question = question.strip()
-            answer = answer.strip()
-            card, created = Basic_card.objects.get_or_create(
-                question=question, answer=answer, textbook=textbook, lesson=lesson)
-            card.save()
+            for card in content:
+                if '-' in card:
+                    question, answer = card.split('-')
+                    question = question.strip()
+                    answer = answer.strip()
+                    card, created = Basic_card.objects.get_or_create(
+                        question=question, answer=answer, textbook=textbook, lesson=lesson)
+                    card.save()
+                else:
+                    messages.error(
+                        request, f'You must split each question and answer by "-", {card} failed')
+        else:
+            messages.error(request, 'You must to split cards by ","')
 
         return redirect('packages')
     context = {'textbook': textbook, 'lesson': lesson}
