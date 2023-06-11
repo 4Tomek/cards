@@ -83,6 +83,7 @@ def cardsFinished(request):
 def createTextbook(request, textbookId=None):
     if request.method == 'POST':
         if not textbookId:
+            profile = request.user.profile
             textbookName = request.POST.get('newTextbook')
             lessonsNames = request.POST.get('lessons')
             if lessonsNames:
@@ -91,7 +92,7 @@ def createTextbook(request, textbookId=None):
             if textbookName:
                 textbookName = textbookName.strip()
                 textbook, created = Textbook.objects.get_or_create(
-                    name=textbookName)
+                    name=textbookName, owner=profile)
                 if created == False:
                     messages.error(
                         request, "Textbook with this name already exists, choose another name")
