@@ -5,10 +5,10 @@
 <h1>{{textbook.name}}</h1>
 <hr>
 <p>Question:</p>
-<h2>{{card.question}}</h2>
+<h2>{{card.card.question}}</h2>
 <hr>
 <p id="showAnswer"></p>
-<button type="button" onclick='document.getElementById("showAnswer").innerHTML = "<h2>{{card.answer}}</h2>"'>Show Answer</button>
+<button type="button" onclick='document.getElementById("showAnswer").innerHTML = "<h2>{{card.card.answer}}</h2>"'>Show Answer</button>
 <br>
 <a href={% url 'package' textbook.id card.id 1 lastCard %}>Right   </a>
 

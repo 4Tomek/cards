@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Textbook, Lesson, Basic_card
+from .models import Textbook, Lesson, Basic_card, ProfileCard
 import random
 from django.contrib import messages
 from django.db.models import Q
@@ -20,38 +20,41 @@ def packages(request):
 
 def package(request, pk, card, answer, lastCard):
     textbookObj = Textbook.objects.get(id=pk)
-    cards = textbookObj.basic_card_set.filter(mastered=False)
+    cards = ProfileCard.objects.filter(
+        profile=request.user.profile, mastered=False)
     cardsFinished = True
 
     if cards:
         cardsFinished = False
+
         if answer:
             cardRight = cards.get(id=card)
             cardRight.mastered = True
             cardRight.save()
 
-            cards = textbookObj.basic_card_set.filter(mastered=False)
+            cards = ProfileCard.objects.filter(
+                profile=request.user.profile, mastered=False)
 
         if cards:
-            repetitionCheck = True
-            if lastCard == None:
+            repetitionNotChecked = True
+            if lastCard == 'None':
                 card = random.choice(cards)
-                repetitionCheck = False
+                repetitionNotChecked = False
 
-            while repetitionCheck:
+            while repetitionNotChecked:
                 card = random.choice(cards)
                 if len(cards) < 2:
-                    repetitionCheck = False
-                if card.question != lastCard:
-                    repetitionCheck = False
-            lastCard = card
+                    repetitionNotChecked = False
+                if card.card.question != lastCard:
+                    repetitionNotChecked = False
+            lastCard = card.card.question
         else:
             cardsFinished = True
 
-    # if i have no cards with: 'mastered=False'
-    if cardsFinished:
+    if cardsFinished:                 # if i have no cards with: 'mastered=False'
         textbookId = textbookObj.id
         context = {'textbookId': textbookId}
+        ProfileCard.objects.filter(profile=request.user.profile).delete()
         return render(request, 'packages/cards-finished.html', context)
     else:
         context = {'textbook': textbookObj, 'card': card, 'lastCard': lastCard}
@@ -63,18 +66,20 @@ def activateLessons(request, pk, card, answer):
     lessons = Lesson.objects.filter(textbook=textbook)
     if request.method == 'POST':
         lessonsIds = request.POST.getlist('selected_lessons')
-        if lessonsIds:
-            cards = textbook.basic_card_set.all()
-            for card in cards:
-                card.mastered = True
-                card.save()
-            for lesson in lessonsIds:
-                cardsToActivate = Basic_card.objects.filter(lesson=lesson)
-                for card in cardsToActivate:
-                    card.mastered = False
-                    card.save()
+        ProfileCard.objects.filter(profile=request.user.profile).delete()
 
-            pk = textbook.id
+        if lessonsIds:
+            cards = []
+            for lesson in lessonsIds:
+                lessonCards = Basic_card.objects.filter(
+                    textbook=textbook, lesson=lesson)
+                cards += lessonCards
+
+            for card in cards:
+                PrivateCard = ProfileCard.objects.create(
+                    profile=request.user.profile, card=card, mastered=False)
+                PrivateCard.save()
+
             return redirect('package', pk=pk, card=card, answer=answer, lastCard=None)
 
     context = {'pk': pk, 'card': card, 'answer': answer, 'lessons': lessons}
