@@ -4,11 +4,17 @@ from django.contrib.auth.decorators import login_required
 from .models import Textbook, Lesson, Basic_card
 import random
 from django.contrib import messages
+from django.db.models import Q
 
 
 def packages(request):
-    textbooks = Textbook.objects.all()
-    context = {'textbooks': textbooks}
+    search_query = ''
+    if request.GET.get('search_query'):
+        search_query = request.GET.get('search_query')
+
+    textbooks = Textbook.objects.filter(Q(name__icontains=search_query) & Q(
+        Q(owner=request.user.profile) | Q(is_public=True)))
+    context = {'textbooks': textbooks, 'search_query': search_query}
     return render(request, 'packages/packages.html', context)
 
 

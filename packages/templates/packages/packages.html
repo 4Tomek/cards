@@ -4,6 +4,12 @@
 
 <h1>Textbooks</h1>
 
+<form class="form" action="{% url 'packages' %}" method="get">
+    <label for="formInput#search">Search among My and Public Textbooks:</label>
+    <input id="formInput#search" type="text" name="search_query" value="{{search_query}}" placeholder="Search by Textbook Name" />
+    <input type="submit" value="Search" />
+</form>
+
 {% for textbook in textbooks %}
     <p>{{textbook.name}}</p>
     <p>{{textbook.created}}</p>
