@@ -2,7 +2,11 @@
 
 {% block content %}
 
+{% if not textbookId %}
 <h1>Create new private textbook</h1>
+{% else %}
+<h1>Add new Lessons</h1>
+{% endif %}
 
 <form method="POST">
     {% csrf_token %}

@@ -9,11 +9,19 @@ from django.db.models import Q
 
 def packages(request):
     search_query = ''
-    if request.GET.get('search_query'):
-        search_query = request.GET.get('search_query')
+    if request.user.is_authenticated:
+        if request.GET.get('search_query'):
+            search_query = request.GET.get('search_query')
 
-    textbooks = Textbook.objects.filter(Q(name__icontains=search_query) & Q(
-        Q(owner=request.user.profile) | Q(is_public=True)))
+        textbooks = Textbook.objects.filter(Q(name__icontains=search_query) & Q(
+            Q(owner=request.user.profile) | Q(is_public=True)))
+    else:
+        if request.GET.get('search_query'):
+            search_query = request.GET.get('search_query')
+
+        textbooks = Textbook.objects.filter(
+            Q(name__icontains=search_query) & Q(is_public=True))
+
     context = {'textbooks': textbooks, 'search_query': search_query}
     return render(request, 'packages/packages.html', context)
 

@@ -2,10 +2,14 @@
 
 {% block content %}
 
-<h1>Textbooks</h1>
+{% if request.user.is_authenticated %}
+<h1>My & Public Textbooks</h1>
+{% else %}
+<h1>Public Textbooks</h1>
+{% endif %}
 
 <form class="form" action="{% url 'packages' %}" method="get">
-    <label for="formInput#search">Search among My and Public Textbooks:</label>
+    <label for="formInput#search">Search Textbooks:</label>
     <input id="formInput#search" type="text" name="search_query" value="{{search_query}}" placeholder="Search by Textbook Name" />
     <input type="submit" value="Search" />
 </form>
@@ -14,11 +18,15 @@
     <p>{{textbook.name}}</p>
     <p>{{textbook.created}}</p>
     <p>{{textbook.id}}</p>
-    <a href="{% url 'create-lessons' textbook.id %}">Add Lessons</a>
-    <br>
-    <a href="{% url 'select-lesson' textbook.id %}">Add Cards into Lesson</a>
-    <br>
-    <a href="{% url 'activate-lessons' textbook.id '0' '0' %}">Learn from this Textbook</a>
+    {% if request.user.is_authenticated %}
+        <a href="{% url 'create-lessons' textbook.id %}">Add Lessons</a>
+        <br>
+        <a href="{% url 'select-lesson' textbook.id %}">Add Cards into Lesson</a>
+        <br>
+        <a href="{% url 'activate-lessons' textbook.id '0' '0' %}">Learn from this Textbook</a>
+    {% else %}
+        <a href="{% url 'login' %}">Sign in and learn from this Textbook</a>
+    {% endif %}
 {% endfor %}
 
 {% endblock content %}
