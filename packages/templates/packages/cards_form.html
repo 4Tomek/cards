@@ -15,8 +15,17 @@
 
     <input type="submit">
 </form>
+
+{% if lesson.basic_card_set.all %}
+    Cards in this lesson: 
+    {% for i in lesson.basic_card_set.all %}
+    {{i}}, 
+    {% endfor %}
+{% endif %}
+
 {% endfor %}
 
-<a href="{% url 'packages' %}">Go to Textbooks</a>
+<a href="{% url 'packages' %}">Back to Textbooks</a>
+<a href="{% url 'activate-lessons' textbook.id '0' '0' %}">Learn from this Textbook</a>
 
 {% endblock %}
