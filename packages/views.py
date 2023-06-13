@@ -139,46 +139,35 @@ def createTextbook(request, textbookId=None):
             else:
                 print("something went wrong")
             textbookId = textbook.id
-            return redirect('select-lesson', textbookId=textbookId)
+            return redirect('create-cards', textbookId=textbookId)
 
     context = {'textbookId': textbookId}
     return render(request, 'packages/textbook_form.html', context)
 
 
-def selectLesson(request, textbookId):
-    textbook = Textbook.objects.get(id=textbookId)
+def createCards(request, textbook):
+    textbook = Textbook.objects.get(id=textbook)
     lessons = Lesson.objects.filter(textbook=textbook)
     if request.method == 'POST':
-        lessonId = None
-        lessonId = request.POST.get('select_lesson')
-        return redirect('create-cards', textbook=textbook.id, lesson=lessonId)
+        for lesson in lessons:
+            content = request.POST.get(lesson.name)
+            if content:
+                if ',' in content:
+                    content = content.split(',')
 
-    context = {'textbookId': textbookId, 'lessons': lessons}
-    return render(request, 'packages/lesson_form.html', context)
-
-
-def createCards(request, textbook, lesson=None):
-    textbook = Textbook.objects.get(id=textbook)
-    lesson = Lesson.objects.get(id=lesson)
-    if request.method == 'POST':
-        content = request.POST.get('content')
-        if ',' in content:
-            content = content.split(',')
-
-            for card in content:
-                if '-' in card:
-                    question, answer = card.split('-')
-                    question = question.strip()
-                    answer = answer.strip()
-                    card, created = Basic_card.objects.get_or_create(
-                        question=question, answer=answer, textbook=textbook, lesson=lesson)
-                    card.save()
+                    for card in content:
+                        if '-' in card:
+                            question, answer = card.split('-')
+                            question = question.strip()
+                            answer = answer.strip()
+                            card, created = Basic_card.objects.get_or_create(
+                                question=question, answer=answer, textbook=textbook, lesson=lesson)
+                            card.save()
+                        else:
+                            messages.error(
+                                request, f'You must split each question and answer by "-", {card} failed')
                 else:
-                    messages.error(
-                        request, f'You must split each question and answer by "-", {card} failed')
-        else:
-            messages.error(request, 'You must to split cards by ","')
+                    messages.error(request, 'You must to split cards by ","')
 
-        return redirect('packages')
-    context = {'textbook': textbook, 'lesson': lesson}
+    context = {'textbook': textbook, 'lessons': lessons}
     return render(request, "packages/cards_form.html", context)

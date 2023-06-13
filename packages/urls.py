@@ -15,8 +15,6 @@ urlpatterns = [
          views.createTextbook, name="create-textbook"),
     path('create-textbook/<str:textbookId>',
          views.createTextbook, name="create-lessons"),
-    path('select-lesson/<str:textbookId>/',
-         views.selectLesson, name="select-lesson"),
-    path('create-cards/<str:textbook>/<str:lesson>/',
+    path('create-cards/<str:textbook>/',
          views.createCards, name="create-cards"),
 ]

@@ -21,7 +21,7 @@
     {% if request.user.is_authenticated %}
         <a href="{% url 'create-lessons' textbook.id %}">Add Lessons</a>
         <br>
-        <a href="{% url 'select-lesson' textbook.id %}">Add Cards into Lesson</a>
+        <a href="{% url 'create-cards' textbook.id %}">Add Cards into Lessons</a>
         <br>
         <a href="{% url 'activate-lessons' textbook.id '0' '0' %}">Learn from this Textbook</a>
     {% else %}

@@ -3,15 +3,20 @@
 
 <h1>New cards</h1>
 
+
+{% for lesson in lessons %}
 <form method="POST">
     {% csrf_token %}
 
     <div>
-        <label>Cards</label>
-        <textarea class="input" name="content" placeholder="write: <question1> - <answer1>, <question2> - <answer2>, ..."></textarea>
+        <label>lesson {{lesson.name}}</label>
+        <textarea class="input" name={{lesson.name}} placeholder="write: <question1> - <answer1>, <question2> - <answer2>, ..."></textarea>
     </div>
 
     <input type="submit">
 </form>
+{% endfor %}
+
+<a href="{% url 'packages' %}">Go to Textbooks</a>
 
 {% endblock %}
