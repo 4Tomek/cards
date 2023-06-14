@@ -10,7 +10,7 @@
 
     <div>
         <label>lesson {{lesson.name}}</label>
-        <textarea class="input" name={{lesson.name}} placeholder="write: <question1> - <answer1>, <question2> - <answer2>, ..."></textarea>
+        <textarea class="input" name="{{lesson.name}}" placeholder="write: <question1> - <answer1>, <question2> - <answer2>, ..."></textarea>
     </div>
 
     <input type="submit">
@@ -22,10 +22,12 @@
     {{i}}, 
     {% endfor %}
 {% endif %}
-
+<br>
 {% endfor %}
 
+<hr>
 <a href="{% url 'packages' %}">Back to Textbooks</a>
+<br>
 <a href="{% url 'activate-lessons' textbook.id '0' '0' %}">Learn from this Textbook</a>
 
 {% endblock %}
