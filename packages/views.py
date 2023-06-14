@@ -124,8 +124,7 @@ def createTextbook(request, textbookId=None):
                                 name=lesson, textbook=textbook)
                             lesson.save()
 
-                    textbookId = textbook.id
-                    return redirect('select-lesson', textbookId=textbookId)
+                    return redirect('create-cards', textbook=textbook.id)
         else:
             textbook = Textbook.objects.get(id=textbookId)
             lessonsNames = request.POST.get('lessons')
@@ -137,9 +136,10 @@ def createTextbook(request, textbookId=None):
                         name=lesson, textbook=textbook)
                     lesson.save()
             else:
-                print("something went wrong")
-            textbookId = textbook.id
-            return redirect('create-cards', textbookId=textbookId)
+                messages.error(
+                    request, "You sent an empty form, try again")
+                return redirect('create-lessons', textbookId=textbook.id)
+            return redirect('create-cards', textbook=textbook.id)
 
     context = {'textbookId': textbookId}
     return render(request, 'packages/textbook_form.html', context)
