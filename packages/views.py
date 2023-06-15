@@ -154,20 +154,20 @@ def createCards(request, textbook):
             if content:
                 if ',' in content:
                     content = content.split(',')
-
-                    for card in content:
-                        if '-' in card:
-                            question, answer = card.split('-')
-                            question = question.strip()
-                            answer = answer.strip()
-                            card, created = Basic_card.objects.get_or_create(
-                                question=question, answer=answer, textbook=textbook, lesson=lesson)
-                            card.save()
-                        else:
-                            messages.error(
-                                request, f'You must split each question and answer by "-", {card} failed')
                 else:
-                    messages.error(request, 'You must to split cards by ","')
+                    content = [content]
+
+                for card in content:
+                    if '-' in card:
+                        question, answer = card.split('-')
+                        question = question.strip()
+                        answer = answer.strip()
+                        card, created = Basic_card.objects.get_or_create(
+                            question=question, answer=answer, textbook=textbook, lesson=lesson)
+                        card.save()
+                    else:
+                        messages.error(
+                            request, f'You must split each question and answer by "-", {card} failed')
 
     context = {'textbook': textbook, 'lessons': lessons}
     return render(request, "packages/cards_form.html", context)
