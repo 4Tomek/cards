@@ -89,6 +89,9 @@ def activateLessons(request, pk):
                 PrivateCard.save()
 
             return redirect('show-cards', pk=pk)
+        else:
+            messages.error(
+                request, 'You must select at least one lesson')
 
     context = {'pk': pk, 'lessons': lessons}
     return render(request, 'textbooks/activate-lessons.html', context)
