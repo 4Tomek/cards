@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Textbook, Lesson, Basic_card, ProfileCard
+from .models import Textbook, Lesson, Card, ProfileCard
 import random
 from django.contrib import messages
 from django.db.models import Q
@@ -79,7 +79,7 @@ def activateLessons(request, pk):
         if lessonsIds:
             cards = []
             for lesson in lessonsIds:
-                lessonCards = Basic_card.objects.filter(
+                lessonCards = Card.objects.filter(
                     textbook=textbook, lesson=lesson)
                 cards += lessonCards
 
@@ -162,7 +162,7 @@ def createCards(request, textbook):
                         question, answer = card.split('-')
                         question = question.strip()
                         answer = answer.strip()
-                        card, created = Basic_card.objects.get_or_create(
+                        card, created = Card.objects.get_or_create(
                             question=question, answer=answer, textbook=textbook, lesson=lesson)
                         card.save()
                     else:

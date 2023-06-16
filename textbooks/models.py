@@ -30,7 +30,7 @@ class Lesson(models.Model):
         return self.name
 
 
-class Basic_card(models.Model):
+class Card(models.Model):
     textbook = models.ForeignKey(Textbook, on_delete=models.CASCADE)
     lesson = models.ForeignKey(
         Lesson, on_delete=models.CASCADE, null=True, blank=True)
@@ -40,6 +40,9 @@ class Basic_card(models.Model):
     id = models.UUIDField(default=uuid.uuid4, unique=True,
                           primary_key=True, editable=False)
 
+    class Meta:
+        unique_together = [['textbook', 'question', 'answer']]
+
     def __str__(self):
         return self.question
 
@@ -48,7 +51,7 @@ class ProfileCard(models.Model):
     profile = models.ForeignKey(
         Profile, on_delete=models.CASCADE, null=True, blank=True)
     card = models.ForeignKey(
-        Basic_card, on_delete=models.CASCADE, null=True, blank=True)
+        Card, on_delete=models.CASCADE, null=True, blank=True)
     mastered = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     id = models.UUIDField(default=uuid.uuid4, unique=True,

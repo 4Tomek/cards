@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import Textbook, Lesson, Basic_card, ProfileCard
+from .models import Textbook, Lesson, Card, ProfileCard
 
 admin.site.register(Textbook)
 admin.site.register(Lesson)
-admin.site.register(Basic_card)
+admin.site.register(Card)
 admin.site.register(ProfileCard)
