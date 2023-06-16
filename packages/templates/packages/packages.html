@@ -23,7 +23,7 @@
         <br>
         <a href="{% url 'create-cards' textbook.id %}">Add Cards into Lessons</a>
         <br>
-        <a href="{% url 'activate-lessons' textbook.id '0' '0' %}">Learn from this Textbook</a>
+        <a href="{% url 'activate-lessons' textbook.id %}">Learn from this Textbook</a>
     {% else %}
         <a href="{% url 'login' %}">Sign in and learn from this Textbook</a>
     {% endif %}

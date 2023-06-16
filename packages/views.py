@@ -26,7 +26,7 @@ def packages(request):
     return render(request, 'packages/packages.html', context)
 
 
-def package(request, pk, card, answer, lastCard):
+def package(request, pk, card=None, answer=None, lastCard=None):
     textbookObj = Textbook.objects.get(id=pk)
     cards = ProfileCard.objects.filter(
         profile=request.user.profile, mastered=False)
@@ -69,7 +69,7 @@ def package(request, pk, card, answer, lastCard):
         return render(request, 'packages/single-package.html', context)
 
 
-def activateLessons(request, pk, card, answer):
+def activateLessons(request, pk):                     # , card, answer
     textbook = Textbook.objects.get(id=pk)
     lessons = Lesson.objects.filter(textbook=textbook)
     if request.method == 'POST':
@@ -88,9 +88,11 @@ def activateLessons(request, pk, card, answer):
                     profile=request.user.profile, card=card, mastered=False)
                 PrivateCard.save()
 
-            return redirect('package', pk=pk, card=card, answer=answer, lastCard=None)
+            # , card=card, answer=answer, lastCard=None
+            return redirect('start-package', pk=pk)
 
-    context = {'pk': pk, 'card': card, 'answer': answer, 'lessons': lessons}
+    # , 'card': card, 'answer': answer
+    context = {'pk': pk, 'lessons': lessons}
     return render(request, 'packages/activate-lessons.html', context)
 
 
