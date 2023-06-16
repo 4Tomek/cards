@@ -62,3 +62,25 @@ class ProfileCard(models.Model):
 
     def __str__(self):
         return str(self.card.question)
+
+
+class LastingCard(models.Model):
+    profile = models.ForeignKey(
+        Profile, on_delete=models.CASCADE, null=True, blank=True)
+    card = models.ForeignKey(
+        Card, on_delete=models.CASCADE, null=True, blank=True)
+    active = models.BooleanField(default=False)
+    last_correct = models.DateTimeField(default=None)
+    correct_in_row = models.IntegerField(default=0)
+    wrong_in_row = models.IntegerField(default=0)
+    wrong_ever_counter = models.IntegerField(default=0)
+    scheduled = models.DateTimeField(default=False)
+    created = models.DateTimeField(auto_now_add=None)
+    id = models.UUIDField(default=uuid.uuid4, unique=True,
+                          primary_key=True, editable=False)
+
+    class Meta:
+        unique_together = [['profile', 'card']]
+
+    def __str__(self):
+        return str(self.card.question)
