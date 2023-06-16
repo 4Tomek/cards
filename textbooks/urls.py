@@ -2,13 +2,12 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.packages, name="packages"),
-    path('package/<str:pk>/<str:card>/<int:answer>/<str:lastCard>/',
-         views.package, name="package"),
-    path('package/<str:pk>/', views.package, name="start-package"),
+    path('', views.listTextbooks, name="list-textbooks"),
+    path('card/<str:pk>/<str:card>/<int:answer>/<str:lastCard>/',
+         views.showCard, name="card"),
+    path('card/<str:pk>/', views.showCard, name="show-cards"),
 
-    #     path('activate/<str:pk>/<str:card>/<int:answer>/',
-    #          views.activateLessons, name="activate-lessons"),
+
     path('activate/<str:pk>/', views.activateLessons, name="activate-lessons"),
     path('cards-finished/<str:pk>/<str:card>/<int:answer>/',
          views.cardsFinished, name="cards-finished"),

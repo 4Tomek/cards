@@ -10,8 +10,8 @@
 <p id="showAnswer"></p>
 <button type="button" onclick='document.getElementById("showAnswer").innerHTML = "<h2>{{card.card.answer}}</h2>"'>Show Answer</button>
 <br>
-<a href={% url 'package' textbook.id card.id 1 lastCard %}>Right   </a>
+<a href={% url 'card' textbook.id card.id 1 lastCard %}>Right   </a>
 
-<a href={% url 'package' textbook.id card.id 0 lastCard %}>Wrong</a>
+<a href={% url 'card' textbook.id card.id 0 lastCard %}>Wrong</a>
 
 {% endblock content %}

@@ -8,7 +8,7 @@
 <h1>Public Textbooks</h1>
 {% endif %}
 
-<form class="form" action="{% url 'packages' %}" method="get">
+<form class="form" action="{% url 'list-textbooks' %}" method="get">
     <label for="formInput#search">Search Textbooks:</label>
     <input id="formInput#search" type="text" name="search_query" value="{{search_query}}" placeholder="Search by Textbook Name" />
     <input type="submit" value="Search" />

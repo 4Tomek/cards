@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.db.models import Q
 
 
-def packages(request):
+def listTextbooks(request):
     search_query = ''
     if request.user.is_authenticated:
         if request.GET.get('search_query'):
@@ -23,10 +23,10 @@ def packages(request):
             Q(name__icontains=search_query) & Q(is_public=True))
 
     context = {'textbooks': textbooks, 'search_query': search_query}
-    return render(request, 'packages/packages.html', context)
+    return render(request, 'textbooks/textbooks.html', context)
 
 
-def package(request, pk, card=None, answer=None, lastCard=None):
+def showCard(request, pk, card=None, answer=None, lastCard=None):
     textbookObj = Textbook.objects.get(id=pk)
     cards = ProfileCard.objects.filter(
         profile=request.user.profile, mastered=False)
@@ -63,13 +63,13 @@ def package(request, pk, card=None, answer=None, lastCard=None):
         textbookId = textbookObj.id
         context = {'textbookId': textbookId}
         ProfileCard.objects.filter(profile=request.user.profile).delete()
-        return render(request, 'packages/cards-finished.html', context)
+        return render(request, 'textbooks/cards-finished.html', context)
     else:
         context = {'textbook': textbookObj, 'card': card, 'lastCard': lastCard}
-        return render(request, 'packages/single-package.html', context)
+        return render(request, 'textbooks/card.html', context)
 
 
-def activateLessons(request, pk):                     # , card, answer
+def activateLessons(request, pk):
     textbook = Textbook.objects.get(id=pk)
     lessons = Lesson.objects.filter(textbook=textbook)
     if request.method == 'POST':
@@ -88,16 +88,14 @@ def activateLessons(request, pk):                     # , card, answer
                     profile=request.user.profile, card=card, mastered=False)
                 PrivateCard.save()
 
-            # , card=card, answer=answer, lastCard=None
-            return redirect('start-package', pk=pk)
+            return redirect('show-cards', pk=pk)
 
-    # , 'card': card, 'answer': answer
     context = {'pk': pk, 'lessons': lessons}
-    return render(request, 'packages/activate-lessons.html', context)
+    return render(request, 'textbooks/activate-lessons.html', context)
 
 
 def cardsFinished(request):
-    return render(request, 'packages/cards-finished.html')
+    return render(request, 'textbooks/cards-finished.html')
 
 
 @login_required(login_url="login")
@@ -116,7 +114,7 @@ def createTextbook(request, textbookId=None):
                 if created == False:
                     messages.error(
                         request, "Textbook with this name already exists, choose another name")
-                    return render(request, 'packages/textbook_form.html')
+                    return render(request, 'textbooks/textbook_form.html')
                 else:
                     textbook.save()
                     if lessonsNames:
@@ -144,7 +142,7 @@ def createTextbook(request, textbookId=None):
             return redirect('create-cards', textbook=textbook.id)
 
     context = {'textbookId': textbookId}
-    return render(request, 'packages/textbook_form.html', context)
+    return render(request, 'textbooks/textbook_form.html', context)
 
 
 def createCards(request, textbook):
@@ -172,4 +170,4 @@ def createCards(request, textbook):
                             request, f'You must split each question and answer by "-", {card} failed')
 
     context = {'textbook': textbook, 'lessons': lessons}
-    return render(request, "packages/cards_form.html", context)
+    return render(request, "textbooks/cards_form.html", context)
