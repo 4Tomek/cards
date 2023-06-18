@@ -5,7 +5,7 @@ from .models import Textbook, Lesson, Card, ProfileCard, LastingCard
 import random
 from django.contrib import messages
 from django.db.models import Q
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 def listTextbooks(request):
@@ -191,7 +191,7 @@ def activateLessons(request, pk):
                 cards += lessonCards
 
             for card in cards:
-                NewLastingCard = LastingCard.objects.create(
+                NewLastingCard, create = LastingCard.objects.get_or_createcreate(
                     profile=request.user.profile, card=card)
                 NewLastingCard.save()
 
@@ -211,26 +211,73 @@ def repeatCards(request, card=None, answer=None, lastCard=None):
     if cardsToRepeat:
         if answer:
             if answer == 1:
-                cardCorrectAnswered = cardsToRepeat.get(id=card)
-                cardCorrectAnswered.last_correct = datetime.now()
-                cardCorrectAnswered.active = True
-                cardCorrectAnswered.correct_in_row += 1
-                cardCorrectAnswered.wrong_in_row = 0
-                cardCorrectAnswered.save()
+                cardCorrectlyAnswered = cardsToRepeat.get(id=card)
+
+                difficulty = 0
+
+                if cardCorrectlyAnswered.wrong_in_row_0 > 10:
+                    difficulty += 3
+                elif cardCorrectlyAnswered.wrong_in_row_1 > 20:
+                    difficulty += 3
+                elif cardCorrectlyAnswered.wrong_in_row_2 > 30:
+                    difficulty += 3
+                elif cardCorrectlyAnswered.wrong_in_row_0 > 5:
+                    difficulty += 2
+                elif cardCorrectlyAnswered.wrong_in_row_1 > 10:
+                    difficulty += 2
+                elif cardCorrectlyAnswered.wrong_in_row_2 > 20:
+                    difficulty += 2
+                elif cardCorrectlyAnswered.wrong_in_row_0 > 0:
+                    difficulty += 1
+                elif cardCorrectlyAnswered.wrong_in_row_1 > 1:
+                    difficulty += 1
+                elif cardCorrectlyAnswered.wrong_in_row_2 > 2:
+                    difficulty += 1
+
+                if cardCorrectlyAnswered.wrong_ever_counter > 120:
+                    difficulty += 3
+                elif cardCorrectlyAnswered.wrong_ever_counter > 40:
+                    difficulty += 2
+                elif cardCorrectlyAnswered.wrong_ever_counter > 5:
+                    difficulty += 1
+
+                if cardCorrectlyAnswered.correct_in_row == 0:
+                    plan = 3
+                elif cardCorrectlyAnswered.correct_in_row == 1:
+                    plan = 7
+                elif cardCorrectlyAnswered.correct_in_row == 2:
+                    plan = 15
+                elif cardCorrectlyAnswered.correct_in_row == 3:
+                    plan = 35
+                elif cardCorrectlyAnswered.correct_in_row == 5:
+                    plan = 50
+                else:
+                    plan = 13 * cardCorrectlyAnswered.correct_in_row
+
+                interval = plan - difficulty
+                if interval < 1:
+                    interval = 1
+
+                cardCorrectlyAnswered.last_correct = datetime.now()
+                cardCorrectlyAnswered.scheduled = datetime.now() + timedelta(days=interval)
+                cardCorrectlyAnswered.correct_in_row += 1
+                cardCorrectlyAnswered.wrong_in_row_2 = cardCorrectlyAnswered.wrong_in_row_1
+                cardCorrectlyAnswered.wrong_in_row_1 = cardCorrectlyAnswered.wrong_in_row_0
+                cardCorrectlyAnswered.wrong_in_row_0 = 0
+                cardCorrectlyAnswered.save()
 
                 cardsToRepeat = LastingCard.objects.filter(
-                    profile=request.user.profile, active=True, scheduled__lt=datetime.now())
+                    profile=request.user.profile, active=True, scheduled__lte=datetime.now())
             if answer == 2:
                 cardWrongAnswered = cardsToRepeat.get(id=card)
                 cardWrongAnswered.scheduled = datetime.now()
-                cardWrongAnswered.active = True
                 cardWrongAnswered.correct_in_row = 0
-                cardWrongAnswered.wrong_in_row += 1
+                cardWrongAnswered.wrong_in_row_0 += 1
                 cardWrongAnswered.wrong_ever_counter += 1
                 cardWrongAnswered.save()
 
                 cardsToRepeat = LastingCard.objects.filter(
-                    profile=request.user.profile, active=True, scheduled__lt=datetime.now())
+                    profile=request.user.profile, active=True, scheduled__lte=datetime.now())
 
         if cardsToRepeat:
             repetitionNotChecked = True
@@ -248,8 +295,23 @@ def repeatCards(request, card=None, answer=None, lastCard=None):
             context = {'card': card, 'lastCard': lastCard}
             return render(request, 'textbooks/lasting-card.html', context)
 
-    return redirect('repeat-next-card')
+    return redirect('add-lasting-cards')
 
 
 def activateLastingCards(request):
+    if request.method == 'POST':
+        cardsNumber = int(request.POST.get('cards_number'))
+        cardsToActivate = LastingCard.objects.filter(
+            profile=request.user.profile, active=False)
+        for i in range(cardsNumber):
+            try:
+                card = random.choice(cardsToActivate)
+                card.active = True
+                card.save()
+            except:
+                messages.error(
+                    request, 'You run out of cards, you can go into your textbooks and activate more lessons')
+                break
+        return redirect('add-lasting-cards')
+
     return render(request, 'textbooks/add-lasting-cards.html')

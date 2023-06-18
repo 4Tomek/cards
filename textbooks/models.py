@@ -70,7 +70,6 @@ class LastingCard(models.Model):
     card = models.ForeignKey(
         Card, on_delete=models.CASCADE, null=True, blank=True)
     active = models.BooleanField(default=False)
-    last_correct = models.DateTimeField(auto_now_add=True)
     correct_in_row = models.IntegerField(default=0)
     wrong_in_row_0 = models.IntegerField(default=0)
     wrong_in_row_1 = models.IntegerField(default=0)

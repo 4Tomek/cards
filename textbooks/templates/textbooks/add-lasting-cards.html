@@ -3,7 +3,26 @@
 {% block content %}
 
 <h1>Add Lasting Cards to your learning</h1>
-<p>Choose if you add 5, 10, 20, 30 or 40 cards</p>
+
+<p>Select how many cards do yo want to add:</p>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <input type="radio" id="5" name="cards_number" value="5">
+    <label for="5">5 cards</label><br>
+    <input type="radio" id="10" name="cards_number" value="10">
+    <label for="10">10 cards</label><br>  
+    <input type="radio" id="20" name="cards_number" value="20">
+    <label for="20">20 cards</label><br>
+    <input type="radio" id="30" name="cards_number" value="30">
+    <label for="30">30 cards</label><br>
+    <input type="radio" id="40" name="cards_number" value="40">
+    <label for="40">40 cards</label><br><br>
+    <input type="submit" value="Submit">
+    <br>
+    <br>
+    <a href="{% url 'add-lasting-cards' %}">Or you can follow this link and finish today's learning</a>
 
 
 {% endblock content %}
