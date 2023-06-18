@@ -2,7 +2,9 @@
 
 {% block content %}
 
-<h1>{{textbook.name}}</h1>
+<h1>Lasting Card</h1>
+<p>Textbook: {{card.textbook.name}}</p>
+<p>Lesson: {{card.lesson.name}}</p>
 <hr>
 <p>Question:</p>
 <h2>{{card.card.question}}</h2>
@@ -10,8 +12,11 @@
 <p id="showAnswer"></p>
 <button type="button" onclick='document.getElementById("showAnswer").innerHTML = "<h2>{{card.card.answer}}</h2>"'>Show Answer</button>
 <br>
-<a href={% url 'card' textbook.id card.id 1 lastCard %}>Correct   </a>
+<a href={% url 'repeat-next-card' card.id 1 lastCard %}>Correct   </a> 
 
-<a href={% url 'card' textbook.id card.id 0 lastCard %}>Wrong</a>
+<a href={% url 'repeat-next-card' card.id 2 lastCard %}>Wrong</a>
+
 
 {% endblock content %}
+
+

@@ -8,7 +8,16 @@ urlpatterns = [
     path('card/<str:pk>/', views.showCard, name="show-cards"),
 
 
-    path('activate/<str:pk>/', views.activateLessons, name="activate-lessons"),
+    path('repeat-cards/', views.repeatCards,
+         name="repeat-cards"),
+    path('repeat-cards/<str:card>/<int:answer>/<str:lastCard>/',
+         views.repeatCards, name="repeat-next-card"),
+    path('activate-lessons/<str:pk>/',
+         views.activateLessons, name="activate-lessons"),
+    path('add-cards/', views.activateLastingCards, name="add-lasting-cards"),
+
+
+    path('pick-lessons/<str:pk>/', views.pickLessons, name="pick-lessons"),
     path('cards-finished/<str:pk>/<str:card>/<int:answer>/',
          views.cardsFinished, name="cards-finished"),
 

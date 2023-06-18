@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Textbook, Lesson, Card, ProfileCard
+from .models import Textbook, Lesson, Card, ProfileCard, LastingCard
 import random
 from django.contrib import messages
 from django.db.models import Q
+from datetime import datetime
 
 
 def listTextbooks(request):
@@ -69,7 +70,7 @@ def showCard(request, pk, card=None, answer=None, lastCard=None):
         return render(request, 'textbooks/card.html', context)
 
 
-def activateLessons(request, pk):
+def pickLessons(request, pk):
     textbook = Textbook.objects.get(id=pk)
     lessons = Lesson.objects.filter(textbook=textbook)
     if request.method == 'POST':
@@ -94,7 +95,7 @@ def activateLessons(request, pk):
                 request, 'You must select at least one lesson')
 
     context = {'pk': pk, 'lessons': lessons}
-    return render(request, 'textbooks/activate-lessons.html', context)
+    return render(request, 'textbooks/pick-lessons.html', context)
 
 
 def cardsFinished(request):
@@ -174,3 +175,81 @@ def createCards(request, textbook):
 
     context = {'textbook': textbook, 'lessons': lessons}
     return render(request, "textbooks/cards_form.html", context)
+
+
+def activateLessons(request, pk):
+    textbook = Textbook.objects.get(id=pk)
+    lessons = Lesson.objects.filter(textbook=textbook)
+    if request.method == 'POST':
+        lessonsIds = request.POST.getlist('selected_lessons')
+
+        if lessonsIds:
+            cards = []
+            for lesson in lessonsIds:
+                lessonCards = Card.objects.filter(
+                    textbook=textbook, lesson=lesson)
+                cards += lessonCards
+
+            for card in cards:
+                NewLastingCard = LastingCard.objects.create(
+                    profile=request.user.profile, card=card)
+                NewLastingCard.save()
+
+            return redirect('repeat-cards')
+        else:
+            messages.error(
+                request, 'You must select at least one lesson')
+
+    context = {'pk': pk, 'lessons': lessons}
+    return render(request, 'textbooks/activate-lessons.html', context)
+
+
+def repeatCards(request, card=None, answer=None, lastCard=None):
+    cardsToRepeat = LastingCard.objects.filter(
+        profile=request.user.profile, active=True, scheduled__lt=datetime.now())
+
+    if cardsToRepeat:
+        if answer:
+            if answer == 1:
+                cardCorrectAnswered = cardsToRepeat.get(id=card)
+                cardCorrectAnswered.last_correct = datetime.now()
+                cardCorrectAnswered.active = True
+                cardCorrectAnswered.correct_in_row += 1
+                cardCorrectAnswered.wrong_in_row = 0
+                cardCorrectAnswered.save()
+
+                cardsToRepeat = LastingCard.objects.filter(
+                    profile=request.user.profile, active=True, scheduled__lt=datetime.now())
+            if answer == 2:
+                cardWrongAnswered = cardsToRepeat.get(id=card)
+                cardWrongAnswered.scheduled = datetime.now()
+                cardWrongAnswered.active = True
+                cardWrongAnswered.correct_in_row = 0
+                cardWrongAnswered.wrong_in_row += 1
+                cardWrongAnswered.wrong_ever_counter += 1
+                cardWrongAnswered.save()
+
+                cardsToRepeat = LastingCard.objects.filter(
+                    profile=request.user.profile, active=True, scheduled__lt=datetime.now())
+
+        if cardsToRepeat:
+            repetitionNotChecked = True
+            if lastCard == None:
+                card = random.choice(cardsToRepeat)
+                repetitionNotChecked = False
+
+            while repetitionNotChecked:
+                card = random.choice(cardsToRepeat)
+                if len(cardsToRepeat) < 2:
+                    repetitionNotChecked = False
+                if card.card.question != lastCard:
+                    repetitionNotChecked = False
+            lastCard = card.card.question
+            context = {'card': card, 'lastCard': lastCard}
+            return render(request, 'textbooks/lasting-card.html', context)
+
+    return redirect('repeat-next-card')
+
+
+def activateLastingCards(request):
+    return render(request, 'textbooks/add-lasting-cards.html')

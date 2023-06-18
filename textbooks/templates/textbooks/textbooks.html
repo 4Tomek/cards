@@ -23,7 +23,9 @@
         <br>
         <a href="{% url 'create-cards' textbook.id %}">Add Cards into Lessons</a>
         <br>
-        <a href="{% url 'activate-lessons' textbook.id %}">Learn from this Textbook</a>
+        <a href="{% url 'pick-lessons' textbook.id %}">Learn from this Textbook</a>
+        <br>
+        <a href="{% url 'activate-lessons' textbook.id %}">Add Lessons from this Textbook to my Long-Term Learning</a>
     {% else %}
         <a href="{% url 'login' %}">Sign in and learn from this Textbook</a>
     {% endif %}
