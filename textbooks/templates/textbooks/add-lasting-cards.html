@@ -8,21 +8,43 @@
 
 <form method="POST">
     {% csrf_token %}
-
-    <input type="radio" id="5" name="cards_number" value="5">
-    <label for="5">5 cards</label><br>
-    <input type="radio" id="10" name="cards_number" value="10">
-    <label for="10">10 cards</label><br>  
-    <input type="radio" id="20" name="cards_number" value="20">
-    <label for="20">20 cards</label><br>
-    <input type="radio" id="30" name="cards_number" value="30">
-    <label for="30">30 cards</label><br>
-    <input type="radio" id="40" name="cards_number" value="40">
-    <label for="40">40 cards</label><br><br>
-    <input type="submit" value="Submit">
+    {% if cardsToActivate %}
+        {% if cardsToActivate < 5 %}
+        <input type="radio" id="{{cardsToActivate}}" name="cards_number" value="{{cardsToActivate}}">
+        <label for="5">{{cardsToActivate}} cards</label><br>
+        <p>If you want to add more cards, click on the link bellow and activate more lessons</p>
+        {% endif %}
+        {% if cardsToActivate >= 5 %}
+        <input type="radio" id="5" name="cards_number" value="5">
+        <label for="5">5 cards</label><br>
+        {% endif %}
+        {% if cardsToActivate >= 10 %}
+        <input type="radio" id="10" name="cards_number" value="10">
+        <label for="10">10 cards</label><br>
+        {% endif %}
+        {% if cardsToActivate >= 20 %}
+        <input type="radio" id="20" name="cards_number" value="20">
+        <label for="20">20 cards</label><br>
+        {% endif %}
+        {% if cardsToActivate >= 30 %}
+        <input type="radio" id="30" name="cards_number" value="30">
+        <label for="30">30 cards</label><br>
+        {% endif %}
+        {% if cardsToActivate >= 5 %}
+        <input type="radio" id="40" name="cards_number" value="40">
+        {% endif %}
+        {% if cardsToActivate >= 30 %}
+        <label for="40">40 cards</label><br><br>
+        <input type="submit" value="Submit">
+        {% endif %}
+    {% else %}
+    <p>You ran out of cards, if you want to add cards to your learning, click on link to activate another lessons</p>
+    {% endif %}
     <br>
     <br>
-    <a href="{% url 'finish-learning' %}">Or you can follow this link and finish today's learning</a>
-
+    <a href="{% url 'list-textbooks' %}">Here you can go to textbooks and activate more lessons</a>
+    <br>
+    <br>
+    <a href="{% url 'finish-learning' %}">Or you can follow this link and finish today's learning: {{cardsToFinishToday}} cards is waiting on you</a>
 
 {% endblock content %}

@@ -398,7 +398,7 @@ def finishCards(request, card=None, answer=None, lastCard=None):
     return render(request, 'textbooks/learning-finished.html')
 
 
-def activateLastingCards(request):
+def activateLastingCards(request, cardsToFinishToday=None, cardsToActivate=None):
     if request.method == 'POST':
         cardsNumber = int(request.POST.get('cards_number'))
         cardsToActivate = LastingCard.objects.filter(
@@ -416,4 +416,11 @@ def activateLastingCards(request):
                 break
         return redirect('repeat-cards')
 
-    return render(request, 'textbooks/add-lasting-cards.html')
+    cardsToFinishToday = len(LastingCard.objects.filter(
+        profile=request.user.profile, active=True, scheduled__lte=datetime.now()))
+    cardsToActivate = len(LastingCard.objects.filter(
+        profile=request.user.profile, active=False))
+
+    context = {'cardsToFinishToday': cardsToFinishToday,
+               'cardsToActivate': cardsToActivate}
+    return render(request, 'textbooks/add-lasting-cards.html', context)
