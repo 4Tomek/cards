@@ -30,13 +30,11 @@
         <input type="radio" id="30" name="cards_number" value="30">
         <label for="30">30 cards</label><br>
         {% endif %}
-        {% if cardsToActivate >= 5 %}
+        {% if cardsToActivate >= 40 %}
         <input type="radio" id="40" name="cards_number" value="40">
-        {% endif %}
-        {% if cardsToActivate >= 30 %}
         <label for="40">40 cards</label><br><br>
-        <input type="submit" value="Submit">
         {% endif %}
+        <input type="submit" value="Submit">
     {% else %}
     <p>You ran out of cards, if you want to add cards to your learning, click on link to activate another lessons</p>
     {% endif %}
