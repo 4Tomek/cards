@@ -1,0 +1,18 @@
+{% block content %}
+
+<h1>Finish Lasting Card¨s</h1>
+<p>Textbook: {{card.textbook.name}}</p>
+<p>Lesson: {{card.lesson.name}}</p>
+<hr>
+<p>Question:</p>
+<h2>{{card.card.question}}</h2>
+<hr>
+<p id="showAnswer"></p>
+<button type="button" onclick='document.getElementById("showAnswer").innerHTML = "<h2>{{card.card.answer}}</h2>"'>Show Answer</button>
+<br>
+<a href={% url 'finish-cards' card.id 1 lastCard %}>Correct   </a> 
+
+<a href={% url 'finish-cards' card.id 2 lastCard %}>Wrong</a>
+
+
+{% endblock content %}

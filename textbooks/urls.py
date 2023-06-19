@@ -15,6 +15,10 @@ urlpatterns = [
     path('activate-lessons/<str:pk>/',
          views.activateLessons, name="activate-lessons"),
     path('add-cards/', views.activateLastingCards, name="add-lasting-cards"),
+    path('finish-cards/', views.finishCards,
+         name="finish-learning"),
+    path('finish-cards/<str:card>/<int:answer>/<str:lastCard>/', views.finishCards,
+         name="finish-cards"),
 
 
     path('pick-lessons/<str:pk>/', views.pickLessons, name="pick-lessons"),

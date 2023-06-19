@@ -205,8 +205,9 @@ def activateLessons(request, pk):
 
 
 def repeatCards(request, card=None, answer=None, lastCard=None):
+
     cardsToRepeat = LastingCard.objects.filter(
-        profile=request.user.profile, active=True, scheduled__lt=datetime.now())
+        profile=request.user.profile, active=True, scheduled__lt=datetime.now(), seen_today=False)
 
     if cardsToRepeat:
         if answer:
@@ -260,6 +261,104 @@ def repeatCards(request, card=None, answer=None, lastCard=None):
 
                 cardCorrectlyAnswered.last_correct = datetime.now()
                 cardCorrectlyAnswered.scheduled = datetime.now() + timedelta(days=interval)
+                cardCorrectlyAnswered.seen_today = False
+                cardCorrectlyAnswered.correct_in_row += 1
+                cardCorrectlyAnswered.wrong_in_row_2 = cardCorrectlyAnswered.wrong_in_row_1
+                cardCorrectlyAnswered.wrong_in_row_1 = cardCorrectlyAnswered.wrong_in_row_0
+                cardCorrectlyAnswered.wrong_in_row_0 = 0
+                cardCorrectlyAnswered.save()
+
+                cardsToRepeat = LastingCard.objects.filter(
+                    profile=request.user.profile, active=True, scheduled__lte=datetime.now(), seen_today=False)
+            if answer == 2:
+                cardWrongAnswered = cardsToRepeat.get(id=card)
+                cardWrongAnswered.scheduled = datetime.now()
+                cardWrongAnswered.seen_today = True
+                cardWrongAnswered.correct_in_row = 0
+                cardWrongAnswered.wrong_in_row_0 += 1
+                cardWrongAnswered.wrong_ever_counter += 1
+                cardWrongAnswered.save()
+
+                cardsToRepeat = LastingCard.objects.filter(
+                    profile=request.user.profile, active=True, scheduled__lte=datetime.now(), seen_today=False)
+
+        if cardsToRepeat:
+            repetitionNotChecked = True
+            if lastCard == None:
+                card = random.choice(cardsToRepeat)
+                repetitionNotChecked = False
+
+            while repetitionNotChecked:
+                card = random.choice(cardsToRepeat)
+                if len(cardsToRepeat) < 2:
+                    repetitionNotChecked = False
+                if card.card.question != lastCard:
+                    repetitionNotChecked = False
+            lastCard = card.card.question
+            context = {'card': card, 'lastCard': lastCard}
+            return render(request, 'textbooks/lasting-card.html', context)
+
+    return redirect('add-lasting-cards')
+
+
+def finishCards(request, card=None, answer=None, lastCard=None):
+
+    cardsToRepeat = LastingCard.objects.filter(
+        profile=request.user.profile, active=True, scheduled__lte=datetime.now())
+
+    if cardsToRepeat:
+        if answer:
+            if answer == 1:
+                cardCorrectlyAnswered = cardsToRepeat.get(id=card)
+
+                difficulty = 0
+
+                if cardCorrectlyAnswered.wrong_in_row_0 > 10:
+                    difficulty += 3
+                elif cardCorrectlyAnswered.wrong_in_row_1 > 20:
+                    difficulty += 3
+                elif cardCorrectlyAnswered.wrong_in_row_2 > 30:
+                    difficulty += 3
+                elif cardCorrectlyAnswered.wrong_in_row_0 > 5:
+                    difficulty += 2
+                elif cardCorrectlyAnswered.wrong_in_row_1 > 10:
+                    difficulty += 2
+                elif cardCorrectlyAnswered.wrong_in_row_2 > 20:
+                    difficulty += 2
+                elif cardCorrectlyAnswered.wrong_in_row_0 > 0:
+                    difficulty += 1
+                elif cardCorrectlyAnswered.wrong_in_row_1 > 1:
+                    difficulty += 1
+                elif cardCorrectlyAnswered.wrong_in_row_2 > 2:
+                    difficulty += 1
+
+                if cardCorrectlyAnswered.wrong_ever_counter > 120:
+                    difficulty += 3
+                elif cardCorrectlyAnswered.wrong_ever_counter > 40:
+                    difficulty += 2
+                elif cardCorrectlyAnswered.wrong_ever_counter > 5:
+                    difficulty += 1
+
+                if cardCorrectlyAnswered.correct_in_row == 0:
+                    plan = 3
+                elif cardCorrectlyAnswered.correct_in_row == 1:
+                    plan = 7
+                elif cardCorrectlyAnswered.correct_in_row == 2:
+                    plan = 15
+                elif cardCorrectlyAnswered.correct_in_row == 3:
+                    plan = 35
+                elif cardCorrectlyAnswered.correct_in_row == 5:
+                    plan = 50
+                else:
+                    plan = 13 * cardCorrectlyAnswered.correct_in_row
+
+                interval = plan - difficulty
+                if interval < 1:
+                    interval = 1
+
+                cardCorrectlyAnswered.last_correct = datetime.now()
+                cardCorrectlyAnswered.scheduled = datetime.now() + timedelta(days=interval)
+                cardCorrectlyAnswered.seen_today = False
                 cardCorrectlyAnswered.correct_in_row += 1
                 cardCorrectlyAnswered.wrong_in_row_2 = cardCorrectlyAnswered.wrong_in_row_1
                 cardCorrectlyAnswered.wrong_in_row_1 = cardCorrectlyAnswered.wrong_in_row_0
@@ -271,6 +370,7 @@ def repeatCards(request, card=None, answer=None, lastCard=None):
             if answer == 2:
                 cardWrongAnswered = cardsToRepeat.get(id=card)
                 cardWrongAnswered.scheduled = datetime.now()
+                cardWrongAnswered.seen_today = True
                 cardWrongAnswered.correct_in_row = 0
                 cardWrongAnswered.wrong_in_row_0 += 1
                 cardWrongAnswered.wrong_ever_counter += 1
@@ -293,9 +393,9 @@ def repeatCards(request, card=None, answer=None, lastCard=None):
                     repetitionNotChecked = False
             lastCard = card.card.question
             context = {'card': card, 'lastCard': lastCard}
-            return render(request, 'textbooks/lasting-card.html', context)
+            return render(request, 'textbooks/finish-lasting-card.html', context)
 
-    return redirect('add-lasting-cards')
+    return render(request, 'textbooks/learning-finished.html')
 
 
 def activateLastingCards(request):
