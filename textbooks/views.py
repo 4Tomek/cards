@@ -191,7 +191,7 @@ def activateLessons(request, pk):
                 cards += lessonCards
 
             for card in cards:
-                NewLastingCard, create = LastingCard.objects.get_or_createcreate(
+                NewLastingCard, create = LastingCard.objects.get_or_create(
                     profile=request.user.profile, card=card)
                 NewLastingCard.save()
 
@@ -308,10 +308,12 @@ def activateLastingCards(request):
                 card = random.choice(cardsToActivate)
                 card.active = True
                 card.save()
+                cardsToActivate = LastingCard.objects.filter(
+                    profile=request.user.profile, active=False)
             except:
                 messages.error(
                     request, 'You run out of cards, you can go into your textbooks and activate more lessons')
                 break
-        return redirect('add-lasting-cards')
+        return redirect('repeat-cards')
 
     return render(request, 'textbooks/add-lasting-cards.html')
