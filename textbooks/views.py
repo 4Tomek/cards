@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Textbook, Lesson, Card, ProfileCard, LastingCard
+from .models import Textbook, Lesson, Card, ProfileCard, LastingCard, ProfileLesson
 import random
 from django.contrib import messages
 from django.db.models import Q
@@ -180,15 +180,26 @@ def createCards(request, textbook):
 def activateLessons(request, pk):
     textbook = Textbook.objects.get(id=pk)
     lessons = Lesson.objects.filter(textbook=textbook)
-    if request.method == 'POST':
-        lessonsIds = request.POST.getlist('selected_lessons')
+    for lesson in lessons:
+        newProfileLesson, created = ProfileLesson.objects.get_or_create(
+            profile=request.user.profile, lesson=lesson)
+        newProfileLesson.save()
 
-        if lessonsIds:
+    profileLessons = ProfileLesson.objects.filter(
+        lesson__in=lessons, active=False).order_by('created')
+    if request.method == 'POST':
+        profileLessonsIds = request.POST.getlist('selected_lessons')
+
+        if profileLessonsIds:
             cards = []
-            for lesson in lessonsIds:
+            for id in profileLessonsIds:
+                profileLesson = ProfileLesson.objects.get(id=id)
                 lessonCards = Card.objects.filter(
-                    textbook=textbook, lesson=lesson)
+                    textbook=textbook, lesson=profileLesson.lesson)
                 cards += lessonCards
+
+                profileLesson.active = True
+                profileLesson.save()
 
             for card in cards:
                 NewLastingCard, create = LastingCard.objects.get_or_create(
@@ -200,7 +211,7 @@ def activateLessons(request, pk):
             messages.error(
                 request, 'You must select at least one lesson')
 
-    context = {'pk': pk, 'lessons': lessons}
+    context = {'pk': pk, 'lessons': profileLessons}
     return render(request, 'textbooks/activate-lessons.html', context)
 
 
