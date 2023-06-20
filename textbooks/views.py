@@ -204,15 +204,15 @@ def activateLessons(request, pk):
     return render(request, 'textbooks/activate-lessons.html', context)
 
 
-def repeatCards(request, card=None, answer=None, lastCard=None):
+def repeatCards(request, card=None, answer=None, lastCard=None, cardsToRepeatNumber=None, cardsToLearnNumber=None):
 
-    cardsToRepeat = LastingCard.objects.filter(
+    cardsToLearn = LastingCard.objects.filter(
         profile=request.user.profile, active=True, scheduled__lt=datetime.now(), seen_today=False)
 
-    if cardsToRepeat:
+    if cardsToLearn:
         if answer:
             if answer == 1:
-                cardCorrectlyAnswered = cardsToRepeat.get(id=card)
+                cardCorrectlyAnswered = cardsToLearn.get(id=card)
 
                 difficulty = 0
 
@@ -268,10 +268,10 @@ def repeatCards(request, card=None, answer=None, lastCard=None):
                 cardCorrectlyAnswered.wrong_in_row_0 = 0
                 cardCorrectlyAnswered.save()
 
-                cardsToRepeat = LastingCard.objects.filter(
+                cardsToLearn = LastingCard.objects.filter(
                     profile=request.user.profile, active=True, scheduled__lte=datetime.now(), seen_today=False)
             if answer == 2:
-                cardWrongAnswered = cardsToRepeat.get(id=card)
+                cardWrongAnswered = cardsToLearn.get(id=card)
                 cardWrongAnswered.scheduled = datetime.now()
                 cardWrongAnswered.seen_today = True
                 cardWrongAnswered.correct_in_row = 0
@@ -279,29 +279,35 @@ def repeatCards(request, card=None, answer=None, lastCard=None):
                 cardWrongAnswered.wrong_ever_counter += 1
                 cardWrongAnswered.save()
 
-                cardsToRepeat = LastingCard.objects.filter(
+                cardsToLearn = LastingCard.objects.filter(
                     profile=request.user.profile, active=True, scheduled__lte=datetime.now(), seen_today=False)
 
-        if cardsToRepeat:
+        if cardsToLearn:
             repetitionNotChecked = True
             if lastCard == None:
-                card = random.choice(cardsToRepeat)
+                card = random.choice(cardsToLearn)
                 repetitionNotChecked = False
 
             while repetitionNotChecked:
-                card = random.choice(cardsToRepeat)
-                if len(cardsToRepeat) < 2:
+                card = random.choice(cardsToLearn)
+                if len(cardsToLearn) < 2:
                     repetitionNotChecked = False
                 if card.card.question != lastCard:
                     repetitionNotChecked = False
             lastCard = card.card.question
-            context = {'card': card, 'lastCard': lastCard}
+
+            cardsToRepeat = LastingCard.objects.filter(
+                profile=request.user.profile, active=True, scheduled__lt=datetime.now())
+            cardsToRepeatNumber = len(cardsToRepeat)
+            cardsToLearnNumber = len(cardsToLearn)
+            context = {'card': card, 'lastCard': lastCard,
+                       'cardsToRepeatNumber': cardsToRepeatNumber, 'cardsToLearnNumber': cardsToLearnNumber}
             return render(request, 'textbooks/lasting-card.html', context)
 
     return redirect('add-lasting-cards')
 
 
-def finishCards(request, card=None, answer=None, lastCard=None):
+def finishCards(request, card=None, answer=None, lastCard=None, cardsToRepeatNumber=None):
 
     cardsToRepeat = LastingCard.objects.filter(
         profile=request.user.profile, active=True, scheduled__lte=datetime.now())
@@ -392,7 +398,9 @@ def finishCards(request, card=None, answer=None, lastCard=None):
                 if card.card.question != lastCard:
                     repetitionNotChecked = False
             lastCard = card.card.question
-            context = {'card': card, 'lastCard': lastCard}
+            cardsToRepeatNumber = len(cardsToRepeat)
+            context = {'card': card, 'lastCard': lastCard,
+                       'cardsToRepeatNumber': cardsToRepeatNumber}
             return render(request, 'textbooks/finish-lasting-card.html', context)
 
     return render(request, 'textbooks/learning-finished.html')
