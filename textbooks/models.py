@@ -86,3 +86,20 @@ class LastingCard(models.Model):
 
     def __str__(self):
         return str(self.card.question)
+
+
+class ProfileLesson(models.Model):
+    profile = models.ForeignKey(
+        Profile, on_delete=models.CASCADE, null=True, blank=True)
+    lesson = models.ForeignKey(
+        Lesson, on_delete=models.CASCADE, null=True, blank=True)
+    active = models.BooleanField(default=False)
+    created = models.DateTimeField(auto_now_add=True)
+    id = models.UUIDField(default=uuid.uuid4, unique=True,
+                          primary_key=True, editable=False)
+
+    class Meta:
+        unique_together = [['profile', 'lesson']]
+
+    def __str__(self):
+        return str(self.lesson.name)
