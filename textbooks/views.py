@@ -149,6 +149,7 @@ def createTextbook(request, textbookId=None):
     return render(request, 'textbooks/textbook_form.html', context)
 
 
+@login_required(login_url="login")
 def createCards(request, textbook):
     textbook = Textbook.objects.get(id=textbook)
     lessons = Lesson.objects.filter(textbook=textbook)
@@ -177,6 +178,7 @@ def createCards(request, textbook):
     return render(request, "textbooks/cards_form.html", context)
 
 
+@login_required(login_url="login")
 def activateLessons(request, pk):
     textbook = Textbook.objects.get(id=pk)
     lessons = Lesson.objects.filter(textbook=textbook)
@@ -215,6 +217,7 @@ def activateLessons(request, pk):
     return render(request, 'textbooks/activate-lessons.html', context)
 
 
+@login_required(login_url="login")
 def repeatCards(request, card=None, answer=None, lastCard=None, cardsToRepeatNumber=None, cardsToLearnNumber=None):
 
     cardsToLearn = LastingCard.objects.filter(
@@ -318,6 +321,7 @@ def repeatCards(request, card=None, answer=None, lastCard=None, cardsToRepeatNum
     return redirect('add-lasting-cards')
 
 
+@login_required(login_url="login")
 def finishCards(request, card=None, answer=None, lastCard=None, cardsToRepeatNumber=None):
 
     cardsToRepeat = LastingCard.objects.filter(
@@ -417,6 +421,7 @@ def finishCards(request, card=None, answer=None, lastCard=None, cardsToRepeatNum
     return render(request, 'textbooks/learning-finished.html')
 
 
+@login_required(login_url="login")
 def activateLastingCards(request, cardsToFinishToday=None, cardsToActivate=None):
     if request.method == 'POST':
         cardsNumber = int(request.POST.get('cards_number'))
