@@ -108,13 +108,18 @@ def createTextbook(request, textbookId=None):
         if not textbookId:
             profile = request.user.profile
             textbookName = request.POST.get('newTextbook')
+            oneWayCards = request.POST.get('one-way')
+            if oneWayCards:
+                one_way = True
+            else:
+                one_way = False
             lessonsNames = request.POST.get('lessons')
             if lessonsNames:
                 lessonsNames = lessonsNames.split(',')
             if textbookName:
                 textbookName = textbookName.strip()
                 textbook, created = Textbook.objects.get_or_create(
-                    name=textbookName, owner=profile)
+                    name=textbookName, owner=profile, one_way=one_way)
                 if created == False:
                     messages.error(
                         request, "Textbook with this name already exists, choose another name")
@@ -170,6 +175,10 @@ def createCards(request, textbook):
                         card, created = Card.objects.get_or_create(
                             question=question, answer=answer, textbook=textbook, lesson=lesson)
                         card.save()
+                        if not textbook.one_way:
+                            card, created = Card.objects.get_or_create(
+                                question=answer, answer=question, textbook=textbook, lesson=lesson)
+
                     else:
                         messages.error(
                             request, f'You must split each question and answer by "-", {card} failed')

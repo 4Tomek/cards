@@ -7,6 +7,7 @@ class Textbook(models.Model):
     owner = models.ForeignKey(
         Profile, null=True, blank=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
+    one_way = models.BooleanField(default=False)
     is_public = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     id = models.UUIDField(default=uuid.uuid4, unique=True,
