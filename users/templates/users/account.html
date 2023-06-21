@@ -15,9 +15,24 @@
     <a title="website" href="{{profile.user_website}}" target="_blank">{{profile.username}}'s Webpage</a>
 {% endif %}
 
-<h3>List of my Textbooks:</h3>
+<h2>List of my Textbooks:</h2>
 {% for textbook in textbooks %}
-    <p>{{textbook.name}}</p>
+    <big><b>{{textbook.name}}</b></big>
+    <br>
+    Created: {{textbook.created}}
+    <br>
+    Number of lessons: {{textbook.lesson_set.count}}
+    <br>
+    Number of cards: {{textbook.card_set.count}}
+    <br>
+    <br>
+    <a href="{% url 'create-lessons' textbook.id %}">Add new Lessons into this Textbook</a>
+    <br>
+    <a href="{% url 'create-cards' textbook.id %}">Add Cards into Lessons</a>
+    <br>
+    <a href="{% url 'pick-lessons' textbook.id %}">Learn from this Textbook in Single Session</a>
+    <br>
+    <a href="{% url 'activate-lessons' textbook.id %}">Add Lessons from this Textbook to my Long-Term Learning</a>
 {% endfor %}
 
 {% endblock %}

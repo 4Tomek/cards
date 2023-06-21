@@ -15,20 +15,37 @@
 </form>
 
 {% for textbook in textbooks %}
-    <p>{{textbook.name}}</p>
-    <p>{{textbook.created}}</p>
-    <p>{{textbook.id}}</p>
+    <br>
+    <big><b>{{textbook.name}}</b></big>
+    <br>
+    {% if textbook.owner %}
+        By {{textbook.owner}}
+        <br>
+    {% endif %}
+    Created: {{textbook.created}}
+    <br>
+    Number of lessons: {{textbook.lesson_set.count}}
+    <br>
+    Number of cards: {{textbook.card_set.count}}
+    <br>
+    <br>
     {% if request.user.is_authenticated %}
-        <a href="{% url 'create-lessons' textbook.id %}">Add Lessons</a>
+        <a href="{% url 'create-lessons' textbook.id %}">Add new Lessons into this Textbook</a>
         <br>
         <a href="{% url 'create-cards' textbook.id %}">Add Cards into Lessons</a>
         <br>
-        <a href="{% url 'pick-lessons' textbook.id %}">Learn from this Textbook</a>
+        <a href="{% url 'pick-lessons' textbook.id %}">Learn from this Textbook in Single Session</a>
         <br>
         <a href="{% url 'activate-lessons' textbook.id %}">Add Lessons from this Textbook to my Long-Term Learning</a>
     {% else %}
         <a href="{% url 'login' %}">Sign in and learn from this Textbook</a>
     {% endif %}
 {% endfor %}
+<br>
+<br>
+<br>
+<br>
+<a href="{% url 'create-textbook' %}">Create new Textbook</a>
+
 
 {% endblock content %}
