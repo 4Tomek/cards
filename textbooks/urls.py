@@ -28,7 +28,7 @@ urlpatterns = [
 
     path('create-textbook/',
          views.createTextbook, name="create-textbook"),
-    path('create-textbook/<str:textbookId>',
+    path('create-lessons/<str:textbookId>',
          views.createTextbook, name="create-lessons"),
     path('create-cards/<str:textbook>/',
          views.createCards, name="create-cards"),

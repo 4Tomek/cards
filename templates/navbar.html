@@ -1,13 +1,13 @@
 {% if request.user.is_authenticated %}
-<a href="{% url 'repeat-cards' %}">My Long-Term Learning</a>
-<a href="{% url 'list-textbooks' %}">Textbooks</a>
-<a href="{% url 'create-textbook' %}">Create New Textbook</a>
-<a href="{% url 'profiles' %}">User Profiles</a>
-<a href="{% url 'account' %}">My Account</a>
+<a href="{% url 'repeat-cards' %}">{% if 'activate-lessons' in request.path or '/add-cards/' == request.path or 'repeat-cards' in request.path or 'finish-cards' in request.path %}<b>My Long-Term Learning</b>{% else %}My Long-Term Learning{% endif%}</a>
+<a href="{% url 'list-textbooks' %}">{% if request.path == '/' or 'card/' in request.path or 'create-cards' in request.path or 'create-lessons' in request.path %}<b>Textbooks</b>{% else %}Textbooks{% endif%}</a>
+<a href="{% url 'create-textbook' %}">{% if '/create-textbook/' == request.path %}<b>Create New Textbook</b>{% else %}Create New Textbook{% endif%}</a>
+<a href="{% url 'profiles' %}">{% if 'profile/' in request.path %}<b>User Profiles</b>{% else %}User Profiles{% endif%}</a>
+<a href="{% url 'account' %}">{% if request.path == '/users/account/' %}<b>My Account</b>{% else %}My Account{% endif%}</a>
 <a href="{% url 'logout' %}">Logout</a>
 {% else %}
-<a href="{% url 'list-textbooks' %}">All Textbooks</a>
-<a href="{% url 'profiles' %}">User Profiles</a>
+<a href="{% url 'list-textbooks' %}">{% if request.path == '/' %}<b>All Textbooks</b>{% else %}All Textbooks{% endif%}</a>
+<a href="{% url 'profiles' %}">{% if 'users/profile/' in request.path or '/users/' == request.path %}<b>User Profiles</b>{% else %}User Profiles{% endif%}</a>
 <a href="{% url 'login' %}">Login</a>
 {% endif %}
 
