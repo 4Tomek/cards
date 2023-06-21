@@ -12,7 +12,7 @@
         {% if cardsToActivate < 5 %}
         <input type="radio" id="{{cardsToActivate}}" name="cards_number" value="{{cardsToActivate}}">
         <label for="5">{{cardsToActivate}} cards</label><br>
-        <p>If you want to add more cards, click on the link bellow and activate more lessons</p>
+        <p>If you want to add more Cards, click on the link bellow and activate more Lessons</p>
         {% endif %}
         {% if cardsToActivate >= 5 %}
         <input type="radio" id="5" name="cards_number" value="5">
@@ -36,13 +36,13 @@
         {% endif %}
         <input type="submit" value="Submit">
     {% else %}
-    <p>You ran out of cards, if you want to add cards to your learning, click on link to activate another lessons</p>
+    <p>You ran out of Cards, if you want to add Cards to your learning, click on link to activate another Lessons</p>
     {% endif %}
     <br>
     <br>
-    <a href="{% url 'list-textbooks' %}">Here you can go to textbooks and activate more lessons</a>
+    <a href="{% url 'list-textbooks' %}">Here you can go to Textbooks and activate more Lessons</a>
     <br>
     <br>
-    <a href="{% url 'finish-learning' %}">Or you can follow this link and finish today's learning: {{cardsToFinishToday}} cards is waiting on you</a>
+    <a href="{% url 'finish-learning' %}">Or you can follow this link and finish today's learning – {{cardsToFinishToday}} Cards waiting on you</a>
 
 {% endblock content %}

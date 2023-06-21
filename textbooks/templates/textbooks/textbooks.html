@@ -41,11 +41,11 @@
         <a href="{% url 'login' %}">Sign in and learn from this Textbook</a>
     {% endif %}
 {% endfor %}
-<br>
-<br>
-<br>
-<br>
+
+{% if request.user.is_authenticated %}
+<br><br><br><br>
 <a href="{% url 'create-textbook' %}">Create new Textbook</a>
+{% endif %}
 
 
 {% endblock content %}

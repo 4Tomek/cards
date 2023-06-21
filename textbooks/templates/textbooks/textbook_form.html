@@ -3,7 +3,7 @@
 {% block content %}
 
 {% if not textbookId %}
-<h1>Create new private textbook</h1>
+<h1>Create new (private) Textbook</h1>
 {% else %}
 <h1>Add new Lessons</h1>
 {% endif %}
@@ -13,13 +13,13 @@
 
     {% if not textbookId %}
     <div>
-        <label>New Textbook</label>
+        <label>Textbook Name: </label>
         <textarea class="input" name="newTextbook" placeholder="here you type new textbook name"></textarea>
     </div>
     {% endif %}
 
     <div>
-        <label>Lesson Names</label>
+        <label>Lesson Names: </label>
         <textarea class="input" name="lessons" placeholder="divide lesson names by comma"></textarea>
     </div>
 
