@@ -9,4 +9,13 @@
 <p>Location: {{profile.location}}</p>
 <p>Bio: {{profile.bio}}</p>
 
+{% if profile.textbook_set %}
+    <p>List of Textbooks: </p>
+    {% for textbook in profile.textbook_set.all %}
+        <li>{{textbook.name}}
+        <br>
+    {% endfor %}
+{% endif %}
+
+
 {% endblock content %}
