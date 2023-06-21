@@ -30,10 +30,12 @@
     <br>
     <br>
     {% if request.user.is_authenticated %}
-        <a href="{% url 'create-lessons' textbook.id %}">Add new Lessons into this Textbook</a>
-        <br>
-        <a href="{% url 'create-cards' textbook.id %}">Add Cards into Lessons</a>
-        <br>
+        {% if request.user.profile == textbook.owner %}
+            <a href="{% url 'create-lessons' textbook.id %}">Add new Lessons into this Textbook</a>
+            <br>
+            <a href="{% url 'create-cards' textbook.id %}">Add Cards into Lessons</a>
+            <br>
+        {% endif %}
         <a href="{% url 'pick-lessons' textbook.id %}">Learn from this Textbook in Single Session</a>
         <br>
         <a href="{% url 'activate-lessons' textbook.id %}">Add Lessons from this Textbook to my Long-Term Learning</a>
