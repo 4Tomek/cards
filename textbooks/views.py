@@ -218,6 +218,40 @@ def activateLessons(request, pk):
 
 
 @login_required(login_url="login")
+def deactivateLessons(request, pk):
+    textbook = Textbook.objects.get(id=pk)
+    lessons = Lesson.objects.filter(textbook=textbook)
+    profileLessons = ProfileLesson.objects.filter(
+        lesson__in=lessons, active=True).order_by('created')
+    if request.method == 'POST':
+        profileLessonsIds = request.POST.getlist('selected_lessons')
+
+        if profileLessonsIds:
+            cards = []
+            for id in profileLessonsIds:
+                profileLesson = ProfileLesson.objects.get(id=id)
+                lessonCards = Card.objects.filter(
+                    textbook=textbook, lesson=profileLesson.lesson)
+                cards += lessonCards
+
+                profileLesson.active = False
+                profileLesson.save()
+
+            for card in cards:
+                NewLastingCard, create = LastingCard.objects.get_or_create(
+                    profile=request.user.profile, card=card)
+                NewLastingCard.delete()
+
+            return redirect('list-textbooks')
+        else:
+            messages.error(
+                request, 'You must select at least one lesson')
+
+    context = {'pk': pk, 'lessons': profileLessons}
+    return render(request, 'textbooks/deactivate-lessons.html', context)
+
+
+@login_required(login_url="login")
 def repeatCards(request, card=None, answer=None, lastCard=None, cardsToRepeatNumber=None, cardsToLearnNumber=None):
 
     cardsToLearn = LastingCard.objects.filter(

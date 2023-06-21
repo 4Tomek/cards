@@ -37,6 +37,8 @@
         <a href="{% url 'pick-lessons' textbook.id %}">Learn from this Textbook in Single Session</a>
         <br>
         <a href="{% url 'activate-lessons' textbook.id %}">Add Lessons from this Textbook to my Long-Term Learning</a>
+        <br>
+        <a href="{% url 'deactivate-lessons' textbook.id %}">Deactivate this Textbook's Lessons from my Long-Term Learning</a>
     {% else %}
         <a href="{% url 'login' %}">Sign in and learn from this Textbook</a>
     {% endif %}

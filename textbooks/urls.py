@@ -14,6 +14,8 @@ urlpatterns = [
          views.repeatCards, name="repeat-next-card"),
     path('activate-lessons/<str:pk>/',
          views.activateLessons, name="activate-lessons"),
+    path('deactivate-lessons/<str:pk>/',
+         views.deactivateLessons, name="deactivate-lessons"),
     path('add-cards/', views.activateLastingCards, name="add-lasting-cards"),
     path('finish-cards/', views.finishCards,
          name="finish-learning"),

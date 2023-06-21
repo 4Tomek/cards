@@ -1,0 +1,19 @@
+{% extends 'main.html' %}
+{% block content %}
+
+<h1>Deactivate Lessons for my Long-Term Learning</h1>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <div>
+        <label>Lessons:</label>
+        {% for lesson in lessons %}
+        <input type="checkbox" id="{{lesson.id}}" name="selected_lessons" value="{{lesson.id}}" >{{lesson}}</input>
+        {% endfor %}
+    </div>
+
+    <input type="submit">
+</form>
+
+{% endblock %}
