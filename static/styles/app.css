@@ -1,0 +1,35 @@
+.navbar {
+    background-color: #24252A;
+    padding: 0 40px;
+}
+
+.section {
+    font-size: 12px;
+    padding: 20px 10px;
+    margin: 0;
+    font-family: Verdana;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.section:hover {
+    background-color: #03718C;
+}
+
+.section_selected {
+    background-color: #0598BD;
+}
+
+/* #0598BD */
+
+a:link.section {
+    color: #D4D5DA;
+}
+
+a:visited.section {
+    color: #D4D5DA;
+}
+
+body {
+    margin: 0;
+}
