@@ -9,11 +9,11 @@
 
     {% for field in form %}
     <div class="form__field">
-      <label for="formInput#text">{{field.label}}</label>
+      <label class="label_two" for="formInput#text">{{field.label}}</label><br>
       {{field}}
     
       {% if field.help_text %}
-      <small>{{field.help_text}}
+      <br><small>{{field.help_text}}</small><br><br>
       {% endif %}
     
       {% for error in field.errors %}
@@ -22,10 +22,10 @@
     
     </div>
     {% endfor %}
-    <input type="submit" value="Register User" />
+    <input class="submit" type="submit" value="Register User" />
 </form>
 
-<p>Already have an account <a href="{% url 'login' %}">Sign Up</a></p>
+<p>Already have an account? <a href="{% url 'login' %}">Sign Up</a></p>
 
 {% else %}
 
@@ -35,7 +35,7 @@
     <input type="password" name="password" placeholder="Enter password" />
     <input type="submit" value="Login" />
 
-    <p>Don't have an account <a href="{% url 'register' %}">Sign Up</a></p>
+    <p>Don't have an account? <a href="{% url 'register' %}">Sign Up</a></p>
 </form>
 {% endif %}
 

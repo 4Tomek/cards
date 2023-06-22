@@ -1,16 +1,28 @@
 body {
     margin: 0;
     font-family: Verdana;
-    background-color: #D6E3EC;
 }
 
 .logo {
-    margin-left: 40px;
+    padding-left: 40px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 60px;
+    width: calc(100% - 40px);
 }
 
+body,
+.logo {
+    background-color: #D6E3EC;
+}
+
+/* NAVBAR */
 .navbar {
     background-color: #24252A;
     padding: 0 40px;
+    margin-top: 60px;
+    box-shadow: 0 0 30px 5px #688087;
 }
 
 .section {
@@ -38,6 +50,8 @@ a:visited.section {
     color: #D4D5DA;
 }
 
+/* MESSAGES */
+
 .messages {
     background-color: red;
 }
@@ -59,17 +73,20 @@ a:visited.section {
 }
 
 .label_one {
-    font-size: 15;
+    font-size: 18px;
     font-weight: bold;
 }
 
 .label_two {
+    font-size: 12px;
     font-weight: bold;
 }
 
 .submit {
     border-radius: 5px;
-    background-color: #D6E3EC;
+    border-width: 1px;
+    padding-top: 3px;
+    background-color: #a0cbe8;
 }
 
 .submit:hover {
