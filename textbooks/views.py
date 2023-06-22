@@ -167,21 +167,25 @@ def createCards(request, textbook):
                 else:
                     content = [content]
 
-                for card in content:
-                    if '-' in card:
-                        question, answer = card.split('-')
-                        question = question.strip()
-                        answer = answer.strip()
-                        card, created = Card.objects.get_or_create(
-                            question=question, answer=answer, textbook=textbook, lesson=lesson)
-                        card.save()
-                        if not textbook.one_way:
+                try:
+                    for card in content:
+                        if '-' in card:
+                            question, answer = card.split('-')
+                            question = question.strip()
+                            answer = answer.strip()
                             card, created = Card.objects.get_or_create(
-                                question=answer, answer=question, textbook=textbook, lesson=lesson)
+                                question=question, answer=answer, textbook=textbook, lesson=lesson)
+                            card.save()
+                            if not textbook.one_way:
+                                card, created = Card.objects.get_or_create(
+                                    question=answer, answer=question, textbook=textbook, lesson=lesson)
 
-                    else:
-                        messages.error(
-                            request, f'You must split each question and answer by "-", {card} failed')
+                        else:
+                            messages.error(
+                                request, f'You must split each question and answer by "-", {card} failed')
+                except:
+                    messages.error(
+                        request, 'Card creation failed: you inserted existing card')
 
     context = {'textbook': textbook, 'lessons': lessons}
     return render(request, "textbooks/cards_form.html", context)
