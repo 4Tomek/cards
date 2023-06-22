@@ -1,0 +1,74 @@
+{% extends 'main.html' %}
+
+{% block content %}
+{% if request.user.is_authenticated %}<a href=""></a>{% else %}       {% endif %}
+<h2>About this Application</h2>
+This is an Application for effective learning using Cards (question - answer). 
+You can create your own Textbooks, or use Public Textbooks, which are available to all users. 
+Learning is possible in two modes: you can use simple one time learning, or you can add Lessons an Words to your long-time learning process.
+Possibility of long-time learning make this Application unique. 
+The algorithm plans next display effectively, so you will learn maximum of kowledge with minimal effort.
+
+<h3>How to learn One-time:</h3>
+<li>create your Account, log-in</li>
+<li>click on {% if request.user.is_authenticated %}<a href="{% url 'list-textbooks' %}">'Textbooks'</a>{% else %}'Texbooks'{% endif %} 
+    or {% if request.user.is_authenticated %}<a href="{% url 'list-textbooks' %}">'My Account'</a>{% else %}'My Account'{% endif %} 
+    (if you created any Textbooks) section on the navigation bar and select Textbook to learn</li>
+<li>click on the link 'Learn from this Textbook in Single Session'</li>
+<li>choose which Lessons do you want to learn</li>
+<li>the app shows you the question –⁠ think of the correct answer</li>
+<li>you can chceck your answer by clicking on 'Show Answer'</li>
+<li>evaluate your answer by clicking 'Correct' or 'Wrong'</li>
+<li>another Card appears</li>
+<li>a correctly answered Card will not reappear, wrongly answered Card will repeat
+<li>learning is finished when all Cards answered</li>
+
+<h3>How to do Long-time learning:</h3>
+<li>create your Account, log-in</li>
+<li>click on {% if request.user.is_authenticated %}<a href="{% url 'list-textbooks' %}">'Textbooks'</a>{% else %}'Texbooks'{% endif %} 
+    or {% if request.user.is_authenticated %}<a href="{% url 'list-textbooks' %}">'My Account'</a>{% else %}'My Account'{% endif %} 
+    (if you created any Textbooks) section on the navigation bar and select Textbook to learn</li>
+<li>click on the link 'Add Lessons From this Textbook to my Long-Term Learning'</li>
+<li>choose which Lessons do you want to learn (you can activate rest of the Lessons in future)</li>
+<li>then you choose how many Cards you want to add to your learning and 'Submit'</li>
+<li>the app shows you the question –⁠ think of the correct answer</li>
+<li>you can chceck your answer by clicking on 'Show answer'</li>
+<li>evaluate your answer by clicking 'Correct' or 'Wrong'</li>
+<li>another Card appears</li>
+<li>a correctly answered Card will not reappear today, app will plan next appear of this Card in a few days</li>
+<li>wrongly answered Card will not be shown again now, but later today</li>
+<li>ad the top of the Page, you can see number of 'Cards planned to learn' (user has never seen these cards) 
+    and number of 'Cards to repeat today' (user did not answer these cards correctly today)</li>
+<li>after learning all cards 'Cards planned to learn: 0' you can add another cards or finish learning</li>
+<li>when you choose to finish learning, cards you answered wrongly will repeat themselves over and over until you get them right</li>
+<li>this is the end of todays learning</li>
+<li>next time you start clikcing on 'My Long-Term Learnint' section</li>
+<li>learning will start with repetition = you learn cards planned form pass the same way as new Cards (just one display)</li>
+<li>then you choose how many cards you want to add and everything repeats</li>
+<li>you can activate and deactivate lessons continuously in the 
+    {% if request.user.is_authenticated %}<a href="{% url 'list-textbooks' %}">'Textbooks'</a>{% else %}'Texbooks'{% endif %} section</li>
+
+<h3>How the Long-time learning works:</h3>
+<li>Long-time learning takes advantage of the fact, that people remember better the things, they meet repeatedly</li>
+<li>user increases his knowledge gradually and without much effort</li>
+<li>the goal is not to learn everything immediately, but learn effectively over a longer period of time</li>
+<li>algorithm evaluates difficulty of the Card and calculates the interval of it's next display 
+    (the easier the card is, the later will be seeen next)</li>
+<li>it is important to learn regullary, optimally every day: 
+    on the one hand, irregularity will lead to the accumulation of cards, 
+    on the other hand, the effect of past learning decreases over time</li>
+
+<h3>How to create your Textbook:</h3>
+<li>create your Account, log-in</li>
+<li>click on {% if request.user.is_authenticated %}<a href="{% url 'create-textbook' %}">'Create New Textbook'</a>{% else %}
+    'Create New Textbook'{% endif %} section on the navigation bar</li>
+<li>type the name you want to give your Textbook in the first field</li>
+<li>if you want the Cards to be one-way only, check the box</li>
+<li>into the second field type names of lessons separated by comma (spaces doesn't matter)</li>
+<li>in the next step you can insert cards into each lesson's textfield</li>
+<li>each card has question and answer separated by hyphen (-), cards are separated by comma</li>
+<li>confirm to create the cards, list of them will show below the textfield</li>
+<li>now the textbook is ready to learn from it</li>
+<li>on textbooks </li>
+
+{% endblock content %}

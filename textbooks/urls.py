@@ -34,4 +34,7 @@ urlpatterns = [
          views.createTextbook, name="create-lessons"),
     path('create-cards/<str:textbook>/',
          views.createCards, name="create-cards"),
+
+    path('about/',
+         views.about, name="about"),
 ]

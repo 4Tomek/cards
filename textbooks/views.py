@@ -491,3 +491,7 @@ def activateLastingCards(request, cardsToFinishToday=None, cardsToActivate=None)
     context = {'cardsToFinishToday': cardsToFinishToday,
                'cardsToActivate': cardsToActivate}
     return render(request, 'textbooks/add-lasting-cards.html', context)
+
+
+def about(request):
+    return render(request, 'textbooks/about.html')

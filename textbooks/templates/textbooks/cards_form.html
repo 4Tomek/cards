@@ -26,6 +26,8 @@
 <hr>
 <a href="{% url 'list-textbooks' %}">Back to Textbooks</a>
 <br>
-<a href="{% url 'pick-lessons' textbook.id %}">Learn from this Textbook</a>
+<a href="{% url 'pick-lessons' textbook.id %}">Learn from this Textbook in Single Session</a>
+<br>
+<a href="{% url 'activate-lessons' textbook.id %}">Add Lessons from this Textbook to my Long-Term Learning</a>
 
 {% endblock %}
