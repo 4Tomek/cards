@@ -3,23 +3,24 @@ from . import views
 
 urlpatterns = [
     path('', views.listTextbooks, name="list-textbooks"),
-    path('card/<str:pk>/<str:card>/<int:answer>/<str:lastCard>/',
+    path('textbooks/card/<str:pk>/<str:card>/<int:answer>/<str:lastCard>/',
          views.showCard, name="card"),
-    path('card/<str:pk>/', views.showCard, name="show-cards"),
+    path('textbooks/card/<str:pk>/', views.showCard, name="show-cards"),
 
 
-    path('repeat-cards/', views.repeatCards,
+    path('long-learning/repeat-cards/', views.repeatCards,
          name="repeat-cards"),
-    path('repeat-cards/<str:card>/<int:answer>/<str:lastCard>/',
+    path('long-learning/repeat-cards/<str:card>/<int:answer>/<str:lastCard>/',
          views.repeatCards, name="repeat-next-card"),
-    path('activate-lessons/<str:pk>/',
+    path('long-learning/activate-lessons/<str:pk>/',
          views.activateLessons, name="activate-lessons"),
-    path('deactivate-lessons/<str:pk>/',
+    path('long-learning/deactivate-lessons/<str:pk>/',
          views.deactivateLessons, name="deactivate-lessons"),
-    path('add-cards/', views.activateLastingCards, name="add-lasting-cards"),
-    path('finish-cards/', views.finishCards,
+    path('long-learning/add-cards/',
+         views.activateLastingCards, name="add-lasting-cards"),
+    path('long-learning/finish-cards/', views.finishCards,
          name="finish-learning"),
-    path('finish-cards/<str:card>/<int:answer>/<str:lastCard>/', views.finishCards,
+    path('long-learning/finish-cards/<str:card>/<int:answer>/<str:lastCard>/', views.finishCards,
          name="finish-cards"),
 
 
@@ -30,11 +31,10 @@ urlpatterns = [
 
     path('create-textbook/',
          views.createTextbook, name="create-textbook"),
-    path('create-lessons/<str:textbookId>',
+    path('textbooks/create-lessons/<str:textbookId>',
          views.createTextbook, name="create-lessons"),
-    path('create-cards/<str:textbook>/',
+    path('textbooks/create-cards/<str:textbook>/',
          views.createCards, name="create-cards"),
 
-    path('about/',
-         views.about, name="about"),
+    path('about/', views.about, name="about"),
 ]
