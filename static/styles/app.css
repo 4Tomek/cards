@@ -1,3 +1,13 @@
+body {
+    margin: 0;
+    font-family: Verdana;
+    background-color: #D6E3EC;
+}
+
+.logo {
+    margin-left: 40px;
+}
+
 .navbar {
     background-color: #24252A;
     padding: 0 40px;
@@ -20,8 +30,6 @@
     background-color: #0598BD;
 }
 
-/* #0598BD */
-
 a:link.section {
     color: #D4D5DA;
 }
@@ -30,6 +38,85 @@ a:visited.section {
     color: #D4D5DA;
 }
 
-body {
-    margin: 0;
+.messages {
+    background-color: red;
+}
+
+.message {
+    padding: 3px 40px;
+    font-size: 13px;
+    color: #D4D5DA;
+}
+
+/* PAGE CONTENT */
+.content {
+    padding: 40px;
+    font-size: 13px;
+}
+
+.content h1 {
+    margin-top: 0;
+}
+
+.label_one {
+    font-size: 15;
+    font-weight: bold;
+}
+
+.label_two {
+    font-weight: bold;
+}
+
+.submit {
+    border-radius: 5px;
+    background-color: #D6E3EC;
+}
+
+.submit:hover {
+    background-color: #03718C;
+}
+
+/* TEXTBOOK FORM */
+.textfield {
+    width: 400px;
+    height: 60px;
+}
+
+.textfield_textbook {
+    width: 400px;
+    height: 15px;
+}
+
+/* CARDS FORM */
+.lesson_cards {
+    border: 1px solid #24252A;
+    border-radius: 4px;
+}
+
+.textfield_cards {
+    height: 100%;
+    width: 100%;
+}
+
+.cards_inside {
+    overflow-y: scroll;
+    resize: none;
+    background-color: #E3F0FA;
+}
+
+.lesson_cards_first_column,
+.lesson_cards_second_column {
+    display: inline-block;
+    width: calc(50% - 6px);
+    height: 100px;
+}
+
+.cards_label {
+    height: 10%;
+    font-weight: bold;
+}
+
+.textfield_cards,
+.cards_inside {
+    height: 90%;
 }

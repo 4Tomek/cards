@@ -3,27 +3,29 @@
 
 <h1>Add new Cards</h1>
 
-
-{% for lesson in lessons %}
 <form method="POST">
+{% for lesson in lessons %}
     {% csrf_token %}
-
-    <div>
-        <label>lesson {{lesson.name}}</label>
-        <textarea class="input" name="{{lesson.name}}" placeholder="write: <question1> - <answer1>, <question2> - <answer2>, ..."></textarea>
+    <div class="lesson_cards">
+        <div class="lesson_cards_first_column">
+            <label class="cards_label">Lesson: {{lesson.name}}</label><br>
+            <textarea class="input textfield_cards" name="{{lesson.name}}" placeholder="write: <question1> - <answer1>, <question2> - <answer2>, ..."></textarea>
+        </div>
+        <div class="lesson_cards_second_column">
+            <label class="cards_label">Cards already in this lesson:</label><br>
+            <div class="cards_inside">
+            {% if lesson.card_set.all %}
+                {% for i in lesson.card_set.all %}{% if forloop.counter != 1 %},&#160;{% endif %}{{i}}{% endfor %}
+            {% endif %}
+            </div>
+        </div>
     </div>
-
-    <input type="submit">
+<input class="submit" type="submit">
+<br><br>
+{% endfor %}
 </form>
 
-{% if lesson.card_set.all %}
-    Cards in this lesson: 
-    {% for i in lesson.card_set.all %}{% if forloop.counter != 1 %},&#160;{% endif %}{{i}}{% endfor %}
-{% endif %}
 <br>
-{% endfor %}
-
-<hr>
 <a href="{% url 'list-textbooks' %}">Back to Textbooks</a>
 <br>
 <a href="{% url 'pick-lessons' textbook.id %}">Learn from this Textbook in Single Session</a>

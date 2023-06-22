@@ -12,7 +12,7 @@
 <h2>{{card.card.question}}</h2>
 <hr>
 <p id="showAnswer"></p>
-<button type="button" onclick='document.getElementById("showAnswer").innerHTML = "<h2>{{card.card.answer}}</h2>"'>Show Answer</button>
+<button class="submit" type="button" onclick='document.getElementById("showAnswer").innerHTML = "<h2>{{card.card.answer}}</h2>"'>Show Answer</button>
 <br>
 <a href={% url 'repeat-next-card' card.id 1 lastCard %}>Correct   </a> 
 

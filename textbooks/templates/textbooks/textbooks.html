@@ -9,14 +9,14 @@
 {% endif %}
 
 <form class="form" action="{% url 'list-textbooks' %}" method="get">
-    <label for="formInput#search">Search Textbooks:</label>
+    <label class="label_two" for="formInput#search">Search Textbooks:</label>
     <input id="formInput#search" type="text" name="search_query" value="{{search_query}}" placeholder="Search by Textbook Name" />
-    <input type="submit" value="Search" />
+    <input class="submit" type="submit" value="Search" />
 </form>
 
 {% for textbook in textbooks %}
     <br>
-    <big><b>{{textbook.name}}</b></big>
+    <div class="label_one">{{textbook.name}}</div>
     <br>
     {% if textbook.owner %}
         By {{textbook.owner}}

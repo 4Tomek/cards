@@ -13,18 +13,19 @@
 
     {% if not textbookId %}
     <div>
-        <label>Textbook Name: </label>
-        <textarea class="input" name="newTextbook" placeholder="here you type new textbook name"></textarea>
+        <label class="label_two">Textbook Name: </label><br>
+        <textarea class="input textfield_textbook" name="newTextbook" placeholder="here you type new textbook name"></textarea>
     </div>
     <input type="checkbox" id="one-way" name="one-way" value="one-way" >One way Cards only</input>
+    <br><br>
     {% endif %}
 
     <div>
-        <label>Lesson Names: </label>
-        <textarea class="input" name="lessons" placeholder="divide lesson names by comma"></textarea>
+        <label class="label_two">Lesson Names: </label><br>
+        <textarea class="input textfield" name="lessons" placeholder="divide lesson names by comma"></textarea>
     </div>
 
-    <input type="submit">
+    <input class="submit" type="submit">
 </form>
 
 {% endblock %}
