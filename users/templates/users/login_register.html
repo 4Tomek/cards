@@ -33,6 +33,7 @@
     {% csrf_token %} 
     <input type="text" name="username" placeholder="Username" />
     <input type="password" name="password" placeholder="Enter password" />
+    <br><a href="{% url 'reset_password' %}">Forgot Password?</a><br>
     <input type="submit" value="Login" />
 
     <p>Don't have an account? <a href="{% url 'register' %}">Sign Up</a></p>
